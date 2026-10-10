@@ -14,7 +14,7 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; overflow: hidden; background: #1a140e; color: var(--text); font-family: var(--sans); }
-  canvas { position: fixed; inset: 0; display: block; cursor: grab; }
+  canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: block; cursor: grab; touch-action: none; }
   canvas:active { cursor: grabbing; }
 
   .clock { position: fixed; top: 18px; left: 50%; transform: translateX(-50%); text-align: center; pointer-events: none;
@@ -29,6 +29,10 @@
     border: 1px solid var(--line); padding: 9px 14px; border-radius: 8px; cursor: pointer; backdrop-filter: blur(6px); }
   .tbtn:hover { border-color: rgba(216, 165, 74, 0.5); }
   .tbtn.on { color: var(--gold); border-color: rgba(216, 165, 74, 0.6); }
+  .zoom { position: fixed; right: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 6px; z-index: 0; }
+  .zoom button { width: 38px; height: 38px; font: 700 18px var(--sans); color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
+  .zoom button:hover { border-color: rgba(216, 165, 74, 0.5); color: var(--gold); }
+  .zoom button.fit { font-size: 11px; letter-spacing: 0.04em; }
   .tbtn kbd { font: 600 10px var(--sans); color: var(--text-3); margin-left: 6px; }
 
   .drawer { position: fixed; top: 62px; bottom: 16px; width: 380px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
@@ -97,6 +101,7 @@
 <div class="toggles l"><button class="tbtn on" id="tKonusma">Konuşmalar<kbd>K</kbd></button></div>
 <div class="toggles r"><button class="tbtn on" id="tKarakter">Karakterler<kbd>C</kbd></button></div>
 
+<div class="zoom"><button id="zIn" title="Yakınlaş">+</button><button id="zOut" title="Uzaklaş">−</button><button id="zFit" class="fit" title="Bütün harita">TÜM</button></div>
 <aside class="drawer l" id="dKonusma"><h2>Konuşmalar <small id="konusmaSayi"></small></h2><div class="scroll" id="konusmalar"><div class="empty">Kasaba henüz uyanmadı.</div></div></aside>
 <aside class="drawer r" id="dKarakter"><h2>Karakterler</h2><div class="scroll" id="karakterler"></div>
   <div class="foot"><span>Haiku çağrısı <b id="mCalls">0</b></span><span>Ort. tur <b id="mAvg">–</b></span></div></aside>
@@ -308,23 +313,35 @@ function binalar(c, M) {
 const cv = $("map"), cx = cv.getContext("2d");
 let cam = { x: 1440, y: 790, z: 1 }, zMin = 1, zFit = 1;
 let ilkBoyut = true;
-// Ekran boyutu ne olursa olsun bütün kasaba sığar; tekerlekle haritanın tamamına kadar uzaklaşılır.
+// Varsayılan ve en uzak görünüm: haritanın tamamı ekrana sığar. Harita ekrandan küçükken ortada durur, büyükken kenarı ekran dışına kaçmaz.
 function boyut() {
-  cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio;
-  zMin = Math.min(innerWidth / W, innerHeight / H) * 0.95;
-  zFit = Math.min(innerWidth / 1960, innerHeight / 1310);
-  if (ilkBoyut) { cam.z = zFit; cam.x = 1440; cam.y = 790; ilkBoyut = false; } else cam.z = Math.max(cam.z, zMin);
+  cv.width = Math.round(innerWidth * devicePixelRatio); cv.height = Math.round(innerHeight * devicePixelRatio);
+  zMin = Math.min(innerWidth / W, innerHeight / H); zFit = zMin;
+  if (ilkBoyut) { cam.z = zMin; cam.x = W / 2; cam.y = H / 2; ilkBoyut = false; } else cam.z = Math.max(cam.z, zMin);
   sinirla();
 }
 function sinirla() { const hw = innerWidth / 2 / cam.z, hh = innerHeight / 2 / cam.z;
   cam.x = hw * 2 >= W ? W / 2 : Math.min(W - hw, Math.max(hw, cam.x)); cam.y = hh * 2 >= H ? H / 2 : Math.min(H - hh, Math.max(hh, cam.y)); }
 addEventListener("resize", boyut);
+const zMax = () => zMin * 4;
+function yakinlas(carpan, sx = innerWidth / 2, sy = innerHeight / 2) {
+  const once = ekranDunya(sx, sy); cam.z = Math.min(zMax(), Math.max(zMin, cam.z * carpan));
+  const sonra = ekranDunya(sx, sy); cam.x += once.x - sonra.x; cam.y += once.y - sonra.y; sinirla();
+}
+// Fare: sürükle kaydır. Trackpad: iki parmak kaydırır, kıstırma yakınlaştırır. Fare tekerleği yakınlaştırır.
 let surukle = null;
 cv.addEventListener("pointerdown", (e) => { surukle = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, hareket: 0 }; cv.setPointerCapture(e.pointerId); });
 cv.addEventListener("pointermove", (e) => { if (!surukle) return; const dx = e.clientX - surukle.x, dy = e.clientY - surukle.y; surukle.hareket = Math.hypot(dx, dy); cam.x = surukle.cx - dx / cam.z; cam.y = surukle.cy - dy / cam.z; sinirla(); });
 cv.addEventListener("pointerup", (e) => { if (surukle && surukle.hareket < 5) tikla(e.clientX, e.clientY); surukle = null; });
-cv.addEventListener("wheel", (e) => { e.preventDefault(); const once = ekranDunya(e.clientX, e.clientY); cam.z = Math.min(zFit * 3, Math.max(zMin, cam.z * Math.exp(-e.deltaY * 0.0015)));
-  const sonra = ekranDunya(e.clientX, e.clientY); cam.x += once.x - sonra.x; cam.y += once.y - sonra.y; sinirla(); }, { passive: false });
+cv.addEventListener("pointercancel", () => { surukle = null; });
+cv.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  const trackpad = e.deltaMode === 0 && (e.deltaX !== 0 || Math.abs(e.deltaY) < 40 || !Number.isInteger(e.deltaY));
+  if (e.ctrlKey) yakinlas(Math.exp(-e.deltaY * 0.012), e.clientX, e.clientY);          // kıstırma
+  else if (trackpad) { cam.x += e.deltaX / cam.z; cam.y += e.deltaY / cam.z; sinirla(); } // iki parmakla kaydırma
+  else yakinlas(e.deltaY < 0 ? 1.18 : 1 / 1.18, e.clientX, e.clientY);                  // fare tekerleği
+}, { passive: false });
+$("zIn").onclick = () => yakinlas(1.35); $("zOut").onclick = () => yakinlas(1 / 1.35); $("zFit").onclick = () => { cam.z = zMin; cam.x = W / 2; cam.y = H / 2; sinirla(); };
 const ekranDunya = (sx, sy) => ({ x: cam.x + (sx - innerWidth / 2) / cam.z, y: cam.y + (sy - innerHeight / 2) / cam.z });
 
 // ——— Sakinler ———
@@ -505,7 +522,7 @@ function karakterler() {
     </div>`;
   }).join("");
   document.querySelectorAll(".char").forEach((el) => el.onclick = () => { secili = secili === el.dataset.id ? null : el.dataset.id; if (secili) delete hafizalar[secili]; karakterler();
-    if (secili) { const k = kisi[secili]; cam.x = k.x; cam.y = k.y; sinirla(); } });
+    if (secili) { const k = kisi[secili]; cam.z = Math.max(cam.z, zMin * 1.8); cam.x = k.x; cam.y = k.y; sinirla(); } });
   const t = olcum.filter((o) => o.sure_sn != null);
   $("mCalls").textContent = olcum.reduce((a, o) => a + (o.cevap || 0), 0);
   $("mAvg").textContent = t.length ? Math.round(t.reduce((a, o) => a + o.sure_sn, 0) / t.length) + " sn" : "–";

@@ -5,514 +5,525 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Değirmenköy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --paper: #f4ead6; --paper-2: #eadcc0; --ink: #3b2f24; --ink-2: #6e5d4b; --ink-3: #9a8a76; --line: rgba(59, 47, 36, 0.16);
-    --ember: #c4572e; --gold: #d49a3a;
-    --serif: "Cormorant Garamond", Georgia, serif; --sans: "Nunito Sans", system-ui, sans-serif;
+    --panel: rgba(22, 17, 12, 0.86); --panel-2: rgba(255, 240, 210, 0.05); --line: rgba(232, 214, 180, 0.14);
+    --text: #efe4cf; --text-2: #bfae91; --text-3: #8a7a62; --gold: #d8a54a; --ember: #d06a3c;
+    --serif: "Cormorant Garamond", Georgia, serif; --sans: "Source Sans 3", system-ui, sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; overflow: hidden; background: #2a2119; font-family: var(--sans); color: var(--ink); }
-  #scene { position: fixed; inset: 0; }
-  .vignette { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(20, 12, 6, 0.55) 100%); }
+  html, body { height: 100%; overflow: hidden; background: #1a140e; color: var(--text); font-family: var(--sans); }
+  canvas { position: fixed; inset: 0; display: block; cursor: grab; }
+  canvas:active { cursor: grabbing; }
 
-  .title { position: fixed; top: 22px; left: 28px; color: #fff8ea; text-shadow: 0 2px 14px rgba(0,0,0,0.45); pointer-events: none; }
-  .title h1 { font-family: var(--serif); font-weight: 600; font-size: 40px; letter-spacing: 0.01em; line-height: 1; }
-  .title .when { font-family: var(--serif); font-style: italic; font-size: 21px; margin-top: 6px; opacity: 0.95; }
-  .title .status { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 12px; opacity: 0.8; display: flex; align-items: center; gap: 8px; }
-  .title .status i { width: 8px; height: 8px; border-radius: 50%; background: #fff8ea; opacity: 0.4; }
-  .title .status.live i { background: var(--gold); opacity: 1; box-shadow: 0 0 10px var(--gold); animation: blink 1.1s ease-in-out infinite; }
-  @keyframes blink { 50% { opacity: 0.3; } }
+  .clock { position: fixed; top: 18px; left: 50%; transform: translateX(-50%); text-align: center; pointer-events: none;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+  .clock .place { font-family: var(--serif); font-weight: 700; font-size: 26px; letter-spacing: 0.04em; color: #f6ead2; }
+  .clock .time { font-family: var(--serif); font-style: italic; font-size: 19px; color: #e9d9b8; margin-top: 2px; }
+  .clock .state { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-top: 6px; height: 14px; }
 
-  .roster { position: fixed; top: 18px; right: 18px; width: 290px; background: var(--paper); border-radius: 12px; box-shadow: 0 8px 24px rgba(30, 18, 8, 0.32); padding: 8px; }
-  .row { display: grid; grid-template-columns: 12px 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: background .15s; }
-  .row:hover { background: rgba(59, 47, 36, 0.06); }
-  .row.sel { background: rgba(212, 154, 58, 0.16); }
-  .row .dot { width: 10px; height: 10px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15); }
-  .row .name { font-family: var(--serif); font-weight: 600; font-size: 19px; line-height: 1.1; }
-  .row .role { font-size: 11.5px; color: var(--ink-3); margin-left: 4px; font-family: var(--sans); font-weight: 400; }
-  .row .where { font-size: 12px; color: var(--ink-2); text-align: right; }
-  .row.busy .where { color: var(--gold); animation: blink 1.1s infinite; }
-  .detail { margin: 2px 4px 6px 32px; padding: 2px 6px 8px; border-left: 2px solid var(--gold); }
-  .detail .act { font-size: 13px; color: var(--ink-2); line-height: 1.4; }
-  .detail .inner { font-family: var(--serif); font-style: italic; font-size: 16px; color: var(--ink); margin-top: 5px; line-height: 1.3; }
-  .detail .mood { font-size: 11.5px; color: var(--ink-3); margin-top: 6px; }
-  .trust { display: flex; margin-top: 9px; gap: 4px; flex-direction: column; }
-  .tr { display: grid; grid-template-columns: 78px 1fr 22px; gap: 8px; align-items: center; font-size: 12px; color: var(--ink-2); }
-  .bar { height: 5px; border-radius: 3px; background: var(--paper-2); overflow: hidden; }
-  .bar i { display: block; height: 100%; border-radius: 3px; transition: width .6s; }
-  .tr b { font-weight: 600; font-size: 11px; color: var(--ink-3); text-align: right; }
-  .hint { font-size: 11px; color: var(--ink-3); padding: 6px 10px 2px; }
+  .toggles { position: fixed; top: 16px; display: flex; gap: 8px; }
+  .toggles.l { left: 16px; } .toggles.r { right: 16px; }
+  .tbtn { font: 700 12px var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); background: var(--panel);
+    border: 1px solid var(--line); padding: 9px 14px; border-radius: 8px; cursor: pointer; backdrop-filter: blur(6px); }
+  .tbtn:hover { border-color: rgba(216, 165, 74, 0.5); }
+  .tbtn.on { color: var(--gold); border-color: rgba(216, 165, 74, 0.6); }
+  .tbtn kbd { font: 600 10px var(--sans); color: var(--text-3); margin-left: 6px; }
 
-  .scroll { position: fixed; left: 18px; bottom: 18px; width: min(760px, calc(100% - 344px)); height: 190px;
-    background: var(--paper); border-radius: 12px; box-shadow: 0 10px 30px rgba(30, 18, 8, 0.4); padding: 12px 20px 12px; display: flex; gap: 20px; }
-  .scroll::before { content: ""; position: absolute; inset: 5px; border: 1px solid var(--line); border-radius: 8px; pointer-events: none; }
-  .feed-wrap { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-  .tabs { display: flex; gap: 4px; margin-bottom: 6px; }
-  .tabs button { font: 700 11px var(--sans); letter-spacing: 0.06em; color: var(--ink-3); background: none; border: 0; padding: 4px 10px; border-radius: 6px; cursor: pointer; }
-  .tabs button.on { color: var(--ink); background: rgba(59, 47, 36, 0.08); }
-  .feed { flex: 1; overflow-y: auto; padding-right: 6px; }
-  .ev { display: grid; grid-template-columns: 52px 128px 1fr; gap: 10px; padding: 5px 0; border-bottom: 1px dotted var(--line); font-size: 13.5px; line-height: 1.4; animation: in .5s ease-out; }
-  @keyframes in { from { opacity: 0; transform: translateY(-3px); } }
-  .ev .t { font-size: 11.5px; color: var(--ink-3); padding-top: 2px; font-variant-numeric: tabular-nums; }
-  .ev .w { font-weight: 700; font-size: 12.5px; color: var(--ink-2); }
-  .ev.soz .m { font-family: var(--serif); font-size: 17px; line-height: 1.25; }
-  .ev.soz .m::before { content: "“"; } .ev.soz .m::after { content: "”"; }
-  .ev.ic_ses .m { font-family: var(--serif); font-style: italic; font-size: 16px; color: var(--ink-2); line-height: 1.25; }
-  .ev.eylem .m { color: var(--ink-2); }
-  .ev.anlatici { background: linear-gradient(90deg, rgba(212, 154, 58, 0.18), transparent); margin: 2px -8px; padding: 6px 8px; border-radius: 6px; border-bottom: none; }
-  .ev.anlatici .w { color: var(--ember); letter-spacing: 0.08em; font-size: 11px; padding-top: 2px; }
-  .ev.anlatici .m { font-family: var(--serif); font-size: 17px; color: var(--ink); font-weight: 600; }
-  .empty { font-family: var(--serif); font-style: italic; font-size: 18px; color: var(--ink-3); padding-top: 50px; text-align: center; }
-  .side { width: 130px; border-left: 1px dashed var(--line); padding-left: 16px; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
-  .metric { font-size: 11px; color: var(--ink-3); font-weight: 700; letter-spacing: 0.06em; }
-  .metric span { display: block; font-family: var(--serif); font-size: 24px; color: var(--ink); font-weight: 600; letter-spacing: 0; line-height: 1.1; }
+  .drawer { position: fixed; top: 62px; bottom: 16px; width: 380px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    backdrop-filter: blur(8px); display: flex; flex-direction: column; overflow: hidden; transition: transform .35s cubic-bezier(.3,.7,.2,1), opacity .35s; }
+  .drawer.l { left: 16px; } .drawer.r { right: 16px; width: 340px; }
+  .drawer.l.hidden { transform: translateX(calc(-100% - 24px)); opacity: 0; }
+  .drawer.r.hidden { transform: translateX(calc(100% + 24px)); opacity: 0; }
+  .drawer h2 { font-family: var(--serif); font-weight: 700; font-size: 22px; padding: 14px 18px 10px; border-bottom: 1px solid var(--line); display: flex; align-items: baseline; gap: 10px; }
+  .drawer h2 small { font-family: var(--sans); font-weight: 600; font-size: 11px; letter-spacing: 0.1em; color: var(--text-3); text-transform: uppercase; }
+  .scroll { flex: 1; overflow-y: auto; padding: 10px 14px 16px; }
+  .scroll::-webkit-scrollbar { width: 6px; } .scroll::-webkit-scrollbar-thumb { background: rgba(232,214,180,0.15); border-radius: 3px; }
 
-  .labels { position: fixed; inset: 0; pointer-events: none; }
-  .tag { position: absolute; transform: translate(-50%, -100%); white-space: nowrap; font-size: 11px; font-weight: 700; color: #fff8ea; background: rgba(40, 28, 18, 0.55);
-    padding: 1px 7px; border-radius: 9px; transition: opacity .3s; }
-  .bubble { position: absolute; transform: translate(-50%, -100%); max-width: 210px; background: var(--paper); color: var(--ink); font-family: var(--serif);
-    font-size: 15px; line-height: 1.2; padding: 6px 10px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); white-space: normal; text-align: center;
-    transition: opacity .4s; }
-  .bubble::after { content: ""; position: absolute; left: 50%; bottom: -6px; margin-left: -6px; border: 6px solid transparent; border-bottom: 0; border-top-color: var(--paper); }
-  .placename { position: absolute; transform: translate(-50%, 0); font-size: 10.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #fff8ea;
-    text-shadow: 0 1px 5px rgba(0,0,0,0.75); transition: opacity .3s; }
-  .bubble b { display: block; font-family: var(--sans); font-size: 10.5px; letter-spacing: 0.06em; color: var(--ink-3); margin-bottom: 1px; }
-  .placename.degirmen { color: #ffd2bd; }
-  @media (max-width: 900px) { .roster { display: none; } .side { display: none; } .scroll { width: calc(100% - 36px); } }
+  .tur { margin-bottom: 16px; }
+  .tur-h { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); padding: 6px 4px; display: flex; gap: 8px; align-items: center; }
+  .tur-h::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .tur.now .tur-h { color: var(--gold); }
+  .event { background: linear-gradient(90deg, rgba(208, 106, 60, 0.18), rgba(208,106,60,0.04)); border-left: 2px solid var(--ember); border-radius: 6px;
+    padding: 9px 12px; margin: 6px 0 8px; font-family: var(--serif); font-size: 17px; line-height: 1.3; color: #f3e3c8; }
+  .event b { display: block; font-family: var(--sans); font-size: 10.5px; letter-spacing: 0.14em; color: var(--ember); margin-bottom: 3px; }
+  .convo { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin: 6px 0; }
+  .convo-h { font-size: 12px; color: var(--text-2); margin-bottom: 7px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .convo-h .who { font-weight: 700; color: var(--text); }
+  .convo-h .at { color: var(--text-3); }
+  .line { display: grid; grid-template-columns: auto 1fr; gap: 8px; padding: 3px 0; font-size: 14.5px; line-height: 1.4; }
+  .line .n { font-weight: 700; white-space: nowrap; }
+  .line .m { color: #ece0c9; font-family: var(--serif); font-size: 17px; line-height: 1.25; }
+  .line.miss .m { opacity: 0.5; }
+  .line.miss .m::after { content: "  (duymadı)"; font-family: var(--sans); font-size: 11px; color: var(--text-3); }
+  .alone { font-size: 13px; color: var(--text-3); font-style: italic; padding: 2px 4px; }
+  .empty { font-family: var(--serif); font-style: italic; font-size: 18px; color: var(--text-3); padding: 30px 6px; text-align: center; }
+
+  .char { border: 1px solid var(--line); border-radius: 10px; margin-bottom: 8px; overflow: hidden; cursor: pointer; background: var(--panel-2); transition: border-color .2s; }
+  .char:hover { border-color: rgba(232,214,180,0.3); }
+  .char.sel { border-color: rgba(216, 165, 74, 0.7); }
+  .char-top { display: grid; grid-template-columns: 6px 1fr auto; gap: 10px; align-items: stretch; }
+  .char-top .stripe { background: var(--c); }
+  .char-main { padding: 9px 0 9px; }
+  .char-main .nm { font-family: var(--serif); font-weight: 700; font-size: 20px; line-height: 1; }
+  .char-main .rl { font-size: 11.5px; color: var(--text-3); margin-left: 6px; font-family: var(--sans); font-weight: 400; }
+  .char-main .act { font-size: 13px; color: var(--text-2); margin-top: 5px; line-height: 1.35; }
+  .char-side { padding: 9px 10px 9px 0; text-align: right; display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+  .where { font-size: 11.5px; font-weight: 600; color: var(--text-2); }
+  .mood { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: color-mix(in srgb, var(--m) 22%, transparent); color: var(--m); text-transform: lowercase; }
+  .inner { font-family: var(--serif); font-style: italic; font-size: 16px; color: #e7d6b6; padding: 0 12px 10px 16px; line-height: 1.25; }
+  .inner::before { content: "içinden: "; font-family: var(--sans); font-style: normal; font-size: 10.5px; letter-spacing: 0.08em; color: var(--text-3); text-transform: uppercase; }
+  .detail { padding: 4px 12px 12px 16px; border-top: 1px dashed var(--line); }
+  .detail h4 { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); margin: 8px 0 6px; font-weight: 700; }
+  .tr { display: grid; grid-template-columns: 90px 1fr 26px; gap: 8px; align-items: center; font-size: 12.5px; color: var(--text-2); padding: 2px 0; }
+  .bar { height: 5px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+  .bar i { display: block; height: 100%; border-radius: 3px; }
+  .tr b { font-weight: 600; font-size: 11px; color: var(--text-3); text-align: right; }
+  .mem { font-size: 13px; color: var(--text-2); line-height: 1.35; padding: 3px 0; border-bottom: 1px dotted rgba(232,214,180,0.08); }
+  .mem span { color: var(--text-3); font-size: 11px; margin-right: 6px; }
+  .busy .where { color: var(--gold); animation: blink 1.1s infinite; }
+  @keyframes blink { 50% { opacity: .35; } }
+  .foot { border-top: 1px solid var(--line); padding: 9px 16px; font-size: 11.5px; color: var(--text-3); display: flex; gap: 14px; }
+  .foot b { color: var(--text-2); font-weight: 600; }
+  @media (max-width: 900px) { .drawer { width: calc(100% - 32px) !important; } }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
-<script type="importmap">
-{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
-               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/" } }
-</script>
 </head>
 <body>
-<div id="scene"></div>
-<div class="vignette"></div>
-<div class="labels" id="labels"></div>
+<canvas id="map"></canvas>
 
-<div class="title">
-  <h1>Değirmenköy</h1>
-  <div class="when" id="when">1. gün, sabah 08.00</div>
-  <div class="status" id="status"><i></i><span id="statusText">Kasaba uyuyor</span></div>
-</div>
+<div class="clock"><div class="place">Değirmenköy</div><div class="time" id="time">1. gün, sabah 08.00</div><div class="state" id="state"></div></div>
+<div class="toggles l"><button class="tbtn on" id="tKonusma">Konuşmalar<kbd>K</kbd></button></div>
+<div class="toggles r"><button class="tbtn on" id="tKarakter">Karakterler<kbd>C</kbd></button></div>
 
-<div class="roster" id="cards"></div>
+<aside class="drawer l" id="dKonusma"><h2>Konuşmalar <small id="konusmaSayi"></small></h2><div class="scroll" id="konusmalar"><div class="empty">Kasaba henüz uyanmadı.</div></div></aside>
+<aside class="drawer r" id="dKarakter"><h2>Karakterler</h2><div class="scroll" id="karakterler"></div>
+  <div class="foot"><span>Haiku çağrısı <b id="mCalls">0</b></span><span>Ort. tur <b id="mAvg">–</b></span></div></aside>
 
-<div class="scroll">
-  <div class="feed-wrap"><div class="tabs"><button class="on" data-f="konusma">Konuşmalar</button><button data-f="hepsi">Her şey</button></div>
-  <div class="feed" id="feed"><div class="empty">Kasaba henüz uyanmadı.</div></div></div>
-  <div class="side">
-    <div class="metric">Haiku çağrısı<span id="mCalls">0</span></div>
-    <div class="metric">Ortalama tur<span id="mAvg">–</span></div>
-    <div class="metric">Toplam süre<span id="mTotal">–</span></div>
-  </div>
-</div>
+<script>
+// ——— Yardımcılar ———
+const $ = (id) => document.getElementById(id);
+let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const R = (a, b) => a + rnd() * (b - a);
+const S = 2.4;                       // plan (1000×600) → dünya pikseli
+const W = 1000 * S, H = 600 * S;
+const P = (x, y) => ({ x: x * S, y: y * S });
+const VAKIT = (h) => h < 11 ? "sabah" : h < 15 ? "öğle" : h < 18 ? "ikindi" : "akşam";
+const RUH = [[/tedirgin|gergin|korku|endişe|kaygı|huzursuz|öfke|sinir|kızgın/, "#e0874a"], [/üzgün|hüzün|yorgun|kırgın|yalnız/, "#9a8fd0"],
+  [/neşeli|mutlu|umutlu|heyecan|keyif|sevinç/, "#8cc56b"], [/sakin|huzurlu|rahat|dingin/, "#6fb0d6"], [/merak|şüphe|düşünceli|dikkat/, "#d8c25a"]];
+const ruhRengi = (r = "") => (RUH.find(([re]) => re.test(r.toLocaleLowerCase("tr"))) || [0, "#b9ab92"])[1];
 
-<script type="module">
-import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+// ——— Dokular ———
+const DOKU = ["aerial_grass_rock", "sparse_grass", "dry_mud_field_001", "withered_grass", "aerial_mud_1", "cobblestone_floor_05", "clay_roof_tiles_02", "forest_leaves_02", "aerial_rocks_02"];
+const img = {};
+const yukle = () => Promise.all(DOKU.map((d) => new Promise((ok) => { const i = new Image(); i.onload = () => { img[d] = i; ok(); }; i.onerror = ok; i.src = `/ekran/doku/${d}.jpg`; })));
 
-// ——— Sahne ———
-const host = document.getElementById("scene");
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-renderer.setSize(innerWidth, innerHeight);
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
-host.appendChild(renderer.domElement);
+// ——— Arazi (bir kez çizilir) ———
+const arazi = document.createElement("canvas"); arazi.width = W; arazi.height = H;
+const evler = [];   // gece pencere ışıkları için
+let mekan = {};
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(32, innerWidth / innerHeight, 0.5, 400);
-camera.position.set(-22, 27, 42);
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(1.5, -1, 4.5);
-controls.enableDamping = true; controls.dampingFactor = 0.06;
-controls.minDistance = 30; controls.maxDistance = 70;
-controls.enablePan = false; controls.rotateSpeed = 0.5; controls.zoomSpeed = 0.6;
-controls.minPolarAngle = 0.55; controls.maxPolarAngle = 1.05;
-controls.minAzimuthAngle = -0.95; controls.maxAzimuthAngle = 0.15;
-
-const hemi = new THREE.HemisphereLight(0xfff1dc, 0x5a4632, 0.9);
-scene.add(hemi);
-const sun = new THREE.DirectionalLight(0xfff0d6, 2.4);
-sun.castShadow = true;
-sun.shadow.mapSize.set(2048, 2048);
-Object.assign(sun.shadow.camera, { left: -24, right: 24, top: 24, bottom: -24, near: 1, far: 120 });
-sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.03;
-scene.add(sun, sun.target);
-
-// ——— Malzemeler ———
-const M = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.85, metalness: 0, ...extra });
-const mat = {
-  grass: M(0x9db86a), grass2: M(0x8aa95c), soil: M(0x7a5638), soilDark: M(0x5e412a), path: M(0xd9c39a),
-  wall: M(0xf3e9d6), wall2: M(0xe8d5b5), wall3: M(0xf0dcc4), stone: M(0xbfb3a1), roof: M(0xb8573a), roof2: M(0xa64b33), roofDark: M(0x7d3a28),
-  wood: M(0x7b5434), woodDark: M(0x4f3522), table: M(0x6b4528, { roughness: 0.6 }), leaf: M(0x6f9a4a), leaf2: M(0x5d8a3f), cypress: M(0x3f6b3a),
-  dome: M(0xd8d2c4), window: M(0x3a3026), glow: new THREE.MeshStandardMaterial({ color: 0x2b2118, emissive: 0xffb45e, emissiveIntensity: 0 }),
-  char: M(0x2e2924), ash: M(0x4a433c), awningA: M(0xc0573d), awningB: M(0xf2e6cf), water: M(0x7fb3c9, { roughness: 0.2 }), skin: M(0xe2b48f),
-  field: M(0xc9b46a), field2: M(0xa8b45e), rock: M(0x9a8f80),
-};
-const windows = [];
-function mesh(geo, material, x = 0, y = 0, z = 0, parent = scene) {
-  const m = new THREE.Mesh(geo, material);
-  m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; parent.add(m); return m;
+function desen(c, ad, olcek, aci = 0) {
+  const p = c.createPattern(img[ad], "repeat"); if (!p) return "#6b7a4a";
+  p.setTransform(new DOMMatrix().rotate(aci).scale(olcek)); return p;
 }
 
-// ——— Masa ve ada ———
-// Ceviz masa: kanvasla çizilmiş damar dokusu
-const wc = document.createElement("canvas"); wc.width = 1024; wc.height = 1024; const wx = wc.getContext("2d");
-wx.fillStyle = "#4a2f1d"; wx.fillRect(0, 0, 1024, 1024);
-for (let i = 0; i < 420; i++) { const y = Math.random() * 1024; wx.strokeStyle = `rgba(${Math.random() < 0.5 ? "30,18,10" : "110,72,44"},${0.08 + Math.random() * 0.18})`;
-  wx.lineWidth = 1 + Math.random() * 3; wx.beginPath(); wx.moveTo(0, y); for (let x = 0; x <= 1024; x += 64) wx.lineTo(x, y + Math.sin(x / 140 + i) * 6); wx.stroke(); }
-const woodTex = new THREE.CanvasTexture(wc); woodTex.colorSpace = THREE.SRGBColorSpace; woodTex.wrapS = woodTex.wrapT = THREE.RepeatWrapping; woodTex.repeat.set(2, 2);
-const tableMesh = mesh(new THREE.BoxGeometry(110, 2, 80), new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.55, color: 0xb08868 }), 1, -3.1, 0); tableMesh.castShadow = false;
-scene.fog = new THREE.Fog(0x3a2a1e, 60, 130);
-const island = new THREE.Group(); scene.add(island);
-mesh(new RoundedBoxGeometry(34, 2.2, 24, 4, 1.2), mat.soil, 1, -1.15, -0.5, island);
-mesh(new RoundedBoxGeometry(33.6, 0.5, 23.6, 4, 1), mat.grass, 1, -0.2, -0.5, island);
+function araziCiz(s) {
+  const c = arazi.getContext("2d");
+  for (const [id, m] of Object.entries(s.mekanlar)) mekan[id] = P(m.x, m.y);
+  const M = mekan;
 
-// Mekan koordinatları (kasaba.json'daki 1000×600 plan) dünyaya: 1 birim = 40 px
-const W = (x, y) => new THREE.Vector3((x - 500) / 40, 0, (y - 330) / 40);
-let places = {};
-
-// Tepe: değirmenin oturduğu yükselti
-const hill = mesh(new THREE.SphereGeometry(5.2, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), mat.grass2, 0, 0, 0, island);
-hill.scale.set(1.15, 0.42, 1); hill.position.copy(W(900, 120)).add(new THREE.Vector3(0, -0.1, 0));
-const HILL_TOP = 2.05;
-
-function heightAt(v) { const c = W(900, 120); const d = Math.hypot((v.x - c.x) / 1.15, v.z - c.z); return d < 5.2 ? Math.sqrt(Math.max(0, 5.2 * 5.2 - d * d)) * 0.42 : 0; }
-
-// Yollar: meydandan her mekana yassı toprak şerit
-function road(a, b, w = 0.9) {
-  const len = a.distanceTo(b), steps = Math.ceil(len / 0.6);
-  for (let i = 0; i <= steps; i++) {
-    const p = a.clone().lerp(b, i / steps);
-    const s = mesh(new THREE.CylinderGeometry(w * 0.55, w * 0.55, 0.06, 14), mat.path, p.x, heightAt(p) + 0.06, p.z, island);
-    s.castShadow = false;
+  // Zemin: havadan çimen, üstüne seyrek çimen ve renk lekeleri
+  c.fillStyle = desen(c, "aerial_grass_rock", 0.9); c.fillRect(0, 0, W, H);
+  c.globalAlpha = 0.45; c.fillStyle = desen(c, "sparse_grass", 0.5, 20); c.fillRect(0, 0, W, H); c.globalAlpha = 1;
+  c.globalCompositeOperation = "multiply"; c.fillStyle = "rgba(150, 170, 110, 0.55)"; c.fillRect(0, 0, W, H);
+  for (let i = 0; i < 70; i++) {
+    const x = R(0, W), y = R(0, H), r = R(80, 260), g = c.createRadialGradient(x, y, 0, x, y, r);
+    const ton = rnd() < 0.5 ? "70, 90, 40" : "190, 170, 110";
+    g.addColorStop(0, `rgba(${ton}, ${R(0.12, 0.25)})`); g.addColorStop(1, `rgba(${ton}, 0)`); c.fillStyle = g; c.fillRect(x - r, y - r, r * 2, r * 2);
   }
+  c.globalCompositeOperation = "source-over";
+
+  // Tarlalar: kasaba dışında, sürülmüş çizgili parseller
+  const tarla = (x, y, w, h, a, ad) => {
+    c.save(); c.translate(x, y); c.rotate(a);
+    c.fillStyle = desen(c, ad, 0.45); c.fillRect(-w / 2, -h / 2, w, h);
+    c.globalCompositeOperation = "multiply"; c.fillStyle = ad === "withered_grass" ? "rgba(170, 160, 90, 0.85)" : "rgba(185, 140, 85, 0.8)"; c.fillRect(-w / 2, -h / 2, w, h); c.globalCompositeOperation = "source-over";
+    c.globalAlpha = 0.18; c.strokeStyle = "#3b2c1a"; c.lineWidth = 3;
+    for (let k = -h / 2; k < h / 2; k += 11) { c.beginPath(); c.moveTo(-w / 2, k); c.lineTo(w / 2, k); c.stroke(); }
+    c.globalAlpha = 1; c.strokeStyle = "rgba(40, 55, 25, 0.75)"; c.lineWidth = 7; c.setLineDash([2, 9]); c.lineCap = "round"; c.strokeRect(-w / 2, -h / 2, w, h); c.setLineDash([]);
+    c.restore();
+  };
+  [[160, 1250, 300, 190, 0.08, "dry_mud_field_001"], [470, 1310, 250, 170, -0.05, "withered_grass"], [1950, 1250, 330, 200, -0.1, "dry_mud_field_001"],
+   [2250, 1050, 220, 260, 0.12, "withered_grass"], [1500, 1330, 260, 140, 0.03, "withered_grass"], [2230, 620, 200, 170, -0.2, "dry_mud_field_001"],
+   [620, 130, 260, 150, 0.1, "withered_grass"]].forEach((t) => tarla(...t));
+
+  // Dere: batıdan güneye kıvrılır
+  const dere = [[-40, 160], [230, 300], [330, 640], [250, 980], [330, 1220], [260, 1480]];
+  const dereYolu = () => { c.beginPath(); c.moveTo(...dere[0]); for (let i = 1; i < dere.length - 1; i++) { const [x, y] = dere[i], [nx, ny] = dere[i + 1]; c.quadraticCurveTo(x, y, (x + nx) / 2, (y + ny) / 2); } c.lineTo(...dere[dere.length - 1]); };
+  c.lineCap = "round"; c.lineJoin = "round";
+  dereYolu(); c.strokeStyle = "rgba(60, 70, 40, 0.8)"; c.lineWidth = 46; c.stroke();
+  dereYolu(); c.strokeStyle = "#3f6470"; c.lineWidth = 30; c.stroke();
+  dereYolu(); c.strokeStyle = "rgba(140, 185, 195, 0.55)"; c.lineWidth = 12; c.stroke();
+  dereYolu(); c.strokeStyle = "rgba(230, 245, 245, 0.25)"; c.lineWidth = 3; c.stroke();
+
+  // Değirmen tepesi
+  const t = M.degirmen, tg = c.createRadialGradient(t.x - 60, t.y - 70, 20, t.x, t.y, 360);
+  tg.addColorStop(0, "rgba(255, 245, 210, 0.28)"); tg.addColorStop(0.55, "rgba(255, 240, 200, 0.06)"); tg.addColorStop(1, "rgba(30, 40, 20, 0)");
+  c.fillStyle = tg; c.beginPath(); c.ellipse(t.x, t.y, 360, 300, 0, 0, Math.PI * 2); c.fill();
+  c.globalCompositeOperation = "multiply"; const ts = c.createRadialGradient(t.x + 120, t.y + 140, 40, t.x + 60, t.y + 80, 380);
+  ts.addColorStop(0, "rgba(60, 60, 40, 0.5)"); ts.addColorStop(1, "rgba(255,255,255,0)"); c.fillStyle = ts; c.fillRect(t.x - 400, t.y - 400, 800, 800);
+  c.globalCompositeOperation = "source-over";
+
+  // Yollar: meydandan her mekana ve kasaba dışına
+  const yollar = Object.entries(M).filter(([id]) => id !== "meydan").map(([id, p]) => ({ id, a: M.meydan, b: p }));
+  yollar.push({ id: "dis1", a: M.meydan, b: P(1040, 330) }, { id: "dis2", a: M.meydan, b: P(-40, 420) }, { id: "dis3", a: M.bakkal, b: P(560, 640) });
+  const kontrol = (a, b, id) => ({ x: (a.x + b.x) / 2 + (id === "degirmen" ? 160 : (b.y - a.y) * 0.12), y: (a.y + b.y) / 2 + (id === "degirmen" ? 90 : (a.x - b.x) * 0.08) });
+  window.yolKontrol = {};
+  for (const y of yollar) {
+    const k = kontrol(y.a, y.b, y.id); yolKontrol[y.id] = k;
+    const genis = y.id === "degirmen" ? 0.6 : y.id.startsWith("dis") ? 0.9 : 1;
+    const ciz = () => { c.beginPath(); c.moveTo(y.a.x, y.a.y); c.quadraticCurveTo(k.x, k.y, y.b.x, y.b.y); };
+    ciz(); c.strokeStyle = "rgba(70, 55, 35, 0.5)"; c.lineWidth = 34 * genis; c.stroke();
+    ciz(); c.strokeStyle = y.id === "degirmen" ? "#9a8a62" : "#a78a5e"; c.lineWidth = 25 * genis; c.stroke();
+    c.globalAlpha = 0.55; ciz(); c.strokeStyle = desen(c, y.id === "degirmen" ? "withered_grass" : "dry_mud_field_001", 0.3); c.lineWidth = 25 * genis; c.stroke(); c.globalAlpha = 1;
+    ciz(); c.strokeStyle = "rgba(235, 215, 170, 0.22)"; c.lineWidth = 9 * genis; c.stroke();
+  }
+  // Meydan: parke taşı
+  const m = M.meydan;
+  c.save(); c.beginPath(); c.arc(m.x, m.y, 100, 0, Math.PI * 2); c.fillStyle = "rgba(60,45,30,0.5)"; c.fill();
+  c.beginPath(); c.arc(m.x, m.y, 92, 0, Math.PI * 2); c.fillStyle = desen(c, "cobblestone_floor_05", 0.18); c.fill();
+  c.fillStyle = "rgba(230, 210, 170, 0.12)"; c.fill(); c.restore();
+
+  // Yanık değirmen çevresi
+  c.save(); c.globalCompositeOperation = "multiply";
+  const yg = c.createRadialGradient(t.x, t.y, 10, t.x, t.y, 120); yg.addColorStop(0, "rgba(40, 32, 26, 0.9)"); yg.addColorStop(1, "rgba(120, 110, 90, 0)");
+  c.fillStyle = yg; c.beginPath(); c.arc(t.x, t.y, 120, 0, Math.PI * 2); c.fill(); c.restore();
+  c.globalAlpha = 0.5; c.fillStyle = desen(c, "aerial_rocks_02", 0.25); c.beginPath(); c.arc(t.x, t.y, 70, 0, Math.PI * 2); c.fill(); c.globalAlpha = 1;
+
+  // Binalar (yollardan sonra)
+  const yolaYakin = (x, y, pay) => Object.values(M).some((p) => Math.hypot(p.x - x, p.y - y) < pay);
+  binalar(c, M);
+  // Ormanlar ve tek ağaçlar
+  const orman = (cx, cy, rx, ry, n) => { for (let i = 0; i < n; i++) { const a = R(0, Math.PI * 2), d = Math.sqrt(rnd()); const x = cx + Math.cos(a) * rx * d, y = cy + Math.sin(a) * ry * d; if (!yolaYakin(x, y, 170)) agac(c, x, y, R(16, 30)); } };
+  orman(120, 80, 260, 120, 70); orman(1500, 70, 330, 90, 70); orman(2350, 300, 130, 260, 60); orman(1100, 1420, 380, 70, 60); orman(70, 820, 70, 260, 40);
+  orman(2380, 1400, 160, 80, 35); orman(1800, 900, 120, 70, 14);
+  for (let i = 0; i < 40; i++) { const x = R(150, W - 150), y = R(120, H - 120); if (!yolaYakin(x, y, 190)) agac(c, x, y, R(14, 22)); }
+  agac(c, m.x - 54, m.y - 40, 46); // meydandaki çınar
+
+  // Kenar karartısı (harita hissi)
+  const v = c.createRadialGradient(W / 2, H / 2, H * 0.45, W / 2, H / 2, W * 0.62);
+  v.addColorStop(0, "rgba(20, 14, 8, 0)"); v.addColorStop(1, "rgba(20, 14, 8, 0.55)"); c.fillStyle = v; c.fillRect(0, 0, W, H);
 }
 
-// ——— Yapı parçaları ———
-function gableRoof(w, d, h, material) {
-  const shape = new THREE.Shape(); shape.moveTo(-w / 2 - 0.15, 0); shape.lineTo(0, h); shape.lineTo(w / 2 + 0.15, 0); shape.closePath();
-  const g = new THREE.ExtrudeGeometry(shape, { depth: d + 0.3, bevelEnabled: false }); g.translate(0, 0, -(d + 0.3) / 2); return new THREE.Mesh(g, material);
-}
-function house({ x, z, w = 1.8, d = 1.6, h = 1.3, rot = 0, wall = mat.wall, roof = mat.roof, chimney = false, glow = true, parent = island }) {
-  const g = new THREE.Group(); g.position.set(x, heightAt(new THREE.Vector3(x, 0, z)), z); g.rotation.y = rot; parent.add(g);
-  mesh(new RoundedBoxGeometry(w, h, d, 2, 0.06), wall, 0, h / 2, 0, g);
-  const r = gableRoof(w, d, h * 0.55, roof); r.position.y = h; r.castShadow = true; g.add(r);
-  const winMat = glow ? mat.glow : mat.window;
-  for (const sx of [-w / 4, w / 4]) { const wn = mesh(new THREE.BoxGeometry(0.28, 0.32, 0.04), winMat, sx, h * 0.58, d / 2 + 0.01, g); wn.castShadow = false; }
-  mesh(new THREE.BoxGeometry(0.34, 0.6, 0.04), mat.woodDark, 0, 0.3, -d / 2 - 0.01, g);
-  if (chimney) mesh(new THREE.BoxGeometry(0.28, 0.7, 0.28), mat.stone, w / 4, h + 0.45, 0.1, g);
-  return g;
-}
-function tree(x, z, s = 1, kind = "round") {
-  const g = new THREE.Group(); g.position.set(x, heightAt(new THREE.Vector3(x, 0, z)), z); island.add(g);
-  if (kind === "cypress") {
-    mesh(new THREE.CylinderGeometry(0.06 * s, 0.08 * s, 0.4 * s, 6), mat.wood, 0, 0.2 * s, 0, g);
-    const c = mesh(new THREE.SphereGeometry(0.42 * s, 10, 8), mat.cypress, 0, 1.25 * s, 0, g); c.scale.set(1, 2.6, 1);
-  } else {
-    mesh(new THREE.CylinderGeometry(0.1 * s, 0.16 * s, 1 * s, 7), mat.wood, 0, 0.5 * s, 0, g);
-    for (const [dx, dy, dz, r, m] of [[0, 1.35, 0, 0.75, mat.leaf], [0.45, 1.15, 0.2, 0.5, mat.leaf2], [-0.4, 1.2, -0.15, 0.55, mat.leaf2], [0.1, 1.75, -0.1, 0.5, mat.leaf]])
-      mesh(new THREE.IcosahedronGeometry(r * s, 1), m, dx * s, dy * s, dz * s, g);
-  }
-  return g;
+function agac(c, x, y, r) {
+  c.save();
+  c.fillStyle = "rgba(15, 20, 8, 0.38)"; c.beginPath(); c.ellipse(x + r * 0.45, y + r * 0.38, r * 1.02, r * 0.9, 0, 0, Math.PI * 2); c.fill();
+  c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fillStyle = desen(c, "forest_leaves_02", 0.12 + r / 400, r * 7); c.fill();
+  c.globalCompositeOperation = "multiply"; c.fillStyle = "rgba(85, 125, 50, 0.85)"; c.fill();
+  c.globalCompositeOperation = "source-over";
+  const g = c.createRadialGradient(x - r * 0.4, y - r * 0.45, r * 0.1, x, y, r * 1.05);
+  g.addColorStop(0, "rgba(220, 240, 160, 0.35)"); g.addColorStop(0.6, "rgba(0,0,0,0)"); g.addColorStop(1, "rgba(10, 20, 5, 0.45)");
+  c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill();
+  c.restore();
 }
 
-// ——— Mekanlar ———
-function buildPlace(id, p) {
-  const g = new THREE.Group(); g.position.copy(p); island.add(g);
-  if (id === "meydan") {
-    // Çınar ve şadırvan
-    const t = tree(p.x - 1.4, p.z - 1.1, 1.9); t.position.y = 0;
-    mesh(new THREE.CylinderGeometry(0.9, 1, 0.35, 16), mat.stone, 0.9, 0.18, 0.7, g);
-    mesh(new THREE.CylinderGeometry(0.75, 0.75, 0.05, 16), mat.water, 0.9, 0.34, 0.7, g).castShadow = false;
-    mesh(new THREE.CylinderGeometry(0.12, 0.16, 0.7, 8), mat.stone, 0.9, 0.55, 0.7, g);
-    for (const a of [0.3, 2.2, 4.1]) mesh(new THREE.BoxGeometry(1, 0.12, 0.32), mat.wood, Math.cos(a) * 2.4 - 0.4, 0.32, Math.sin(a) * 2 + 0.3, g).rotation.y = -a + Math.PI / 2;
-  }
-  if (id === "firin") {
-    const h = house({ x: p.x - 0.6, z: p.z - 0.9, w: 2.4, d: 1.8, h: 1.4, wall: mat.wall2, roof: mat.roof, chimney: true });
-    h.rotation.y = 0.15; smokeAt(new THREE.Vector3(p.x - 0.6 + 0.6, 2.6, p.z - 0.8), 0xd9d2c7);
-    mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.2, 10), mat.wood, p.x + 1.1 - p.x, 0.1, 0.5, g);
-  }
-  if (id === "cami") {
-    const c = new THREE.Group(); c.position.set(0, 0, -0.6); g.add(c);
-    mesh(new RoundedBoxGeometry(3, 1.6, 2.6, 2, 0.05), mat.wall, 0, 0.8, 0, c);
-    mesh(new THREE.CylinderGeometry(0.95, 1.05, 0.35, 16), mat.wall, 0, 1.75, 0, c);
-    mesh(new THREE.SphereGeometry(0.98, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), mat.dome, 0, 1.9, 0, c);
-    mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.4, 6), mat.stone, 0, 3.05, 0, c);
-    const mn = new THREE.Group(); mn.position.set(1.8, 0, -0.7); c.add(mn);
-    mesh(new THREE.CylinderGeometry(0.22, 0.26, 4.2, 12), mat.wall, 0, 2.1, 0, mn);
-    mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.12, 12), mat.stone, 0, 3.4, 0, mn);
-    mesh(new THREE.ConeGeometry(0.24, 0.9, 12), mat.roofDark, 0, 4.65, 0, mn);
-    for (const sx of [-0.8, 0, 0.8]) { const wn = mesh(new THREE.BoxGeometry(0.26, 0.5, 0.04), mat.glow, sx, 0.9, 1.31, c); wn.castShadow = false; }
-  }
-  if (id === "kahvehane") {
-    const h = house({ x: p.x + 0.3, z: p.z - 1, w: 2.4, d: 1.7, h: 1.35, wall: mat.wall3, roof: mat.roof2 }); h.rotation.y = -0.2;
-    for (let i = 0; i < 6; i++) { const s = mesh(new THREE.BoxGeometry(0.4, 0.05, 0.75), i % 2 ? mat.awningB : mat.awningA, -1 + i * 0.4, 1.15, 0.95, h); s.rotation.x = 0.35; }
-    for (const [tx, tz] of [[-0.9, 1.3], [0.9, 1.5]]) {
-      mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.05, 12), mat.wood, tx, 0.42, tz, g);
-      mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.4, 6), mat.woodDark, tx, 0.2, tz, g);
-      for (const a of [0, 2.1, 4.2]) mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.26, 8), mat.woodDark, tx + Math.cos(a) * 0.5, 0.13, tz + Math.sin(a) * 0.5, g);
+// Tepeden bina: gölge, iki yüzlü kiremit çatı, mahya, baca
+function ev(c, x, y, w, h, a, o = {}) {
+  c.save(); c.translate(x, y); c.rotate(a);
+  c.fillStyle = "rgba(10, 8, 4, 0.42)"; c.filter = "blur(4px)"; c.fillRect(-w / 2 + 9, -h / 2 + 8, w, h); c.filter = "none";
+  if (o.avlu) { c.fillStyle = "#8a7350"; c.fillRect(-w / 2 - 14, h / 2, w + 28, o.avlu); c.globalAlpha = 0.5; c.fillStyle = desen(c, "dry_mud_field_001", 0.3); c.fillRect(-w / 2 - 14, h / 2, w + 28, o.avlu); c.globalAlpha = 1;
+    c.strokeStyle = "rgba(70, 52, 32, 0.75)"; c.lineWidth = 3; c.strokeRect(-w / 2 - 14, h / 2, w + 28, o.avlu); }
+  const yatay = w >= h;
+  c.fillStyle = desen(c, o.cati || "clay_roof_tiles_02", 0.09, yatay ? 90 : 0);
+  if (yatay) { c.fillRect(-w / 2, -h / 2, w, h / 2); c.fillRect(-w / 2, 0, w, h / 2); } else { c.fillRect(-w / 2, -h / 2, w / 2, h); c.fillRect(0, -h / 2, w / 2, h); }
+  c.fillStyle = o.ton || "rgba(150, 60, 30, 0.35)"; c.globalCompositeOperation = "multiply"; c.fillRect(-w / 2, -h / 2, w, h); c.globalCompositeOperation = "source-over";
+  c.fillStyle = "rgba(255, 225, 180, 0.16)"; yatay ? c.fillRect(-w / 2, -h / 2, w, h / 2) : c.fillRect(-w / 2, -h / 2, w / 2, h);
+  c.fillStyle = "rgba(30, 10, 0, 0.3)"; yatay ? c.fillRect(-w / 2, 0, w, h / 2) : c.fillRect(0, -h / 2, w / 2, h);
+  c.strokeStyle = "rgba(70, 25, 10, 0.9)"; c.lineWidth = 2.5; c.beginPath(); yatay ? (c.moveTo(-w / 2, 0), c.lineTo(w / 2, 0)) : (c.moveTo(0, -h / 2), c.lineTo(0, h / 2)); c.stroke();
+  c.strokeStyle = "rgba(30, 15, 5, 0.6)"; c.lineWidth = 1.5; c.strokeRect(-w / 2, -h / 2, w, h);
+  if (o.baca) { c.fillStyle = "#5a4a3c"; c.fillRect(w / 4, -h / 4, 9, 9); c.fillStyle = "#2a2018"; c.fillRect(w / 4 + 2, -h / 4 + 2, 5, 5); }
+  c.restore();
+  evler.push({ x, y, w, h });
+}
+
+function binalar(c, M) {
+  // Dolgu evler: mekanlardan uzak, kenarlara yakın
+  const dolgu = [[640, 470, 0.3], [560, 1040, -0.1], [930, 1240, 0.2], [1520, 1140, -0.25], [1960, 900, 0.1], [2050, 560, -0.15], [1640, 300, 0.2],
+    [430, 330, -0.2], [820, 240, 0.15], [1300, 160, -0.1], [1040, 1080, 0.05], [1720, 820, 0.25], [700, 720, -0.3], [1450, 520, 0.1], [2100, 1180, -0.2], [380, 1060, 0.15]];
+  dolgu.forEach(([x, y, a], i) => ev(c, x, y, 64 + (i % 3) * 14, 46 + (i % 2) * 10, a, { baca: i % 3 === 0, avlu: i % 4 === 1 ? 26 : 0, ton: i % 2 ? "rgba(160, 70, 35, 0.3)" : "rgba(130, 55, 30, 0.4)" }));
+  // Yol boyunca iki yanda evler (mekanlardan ve meydandan uzak)
+  for (const [id, p] of Object.entries(M)) {
+    if (id === "meydan" || id === "degirmen") continue;
+    const a = M.meydan, k = window.yolKontrol?.[id];
+    for (const t of [0.42, 0.68]) for (const yan of [-1, 1]) {
+      if (rnd() < 0.2) continue;
+      const q = yolNoktasi(a, p, id, t), q2 = yolNoktasi(a, p, id, t + 0.02), aci = Math.atan2(q2.y - q.y, q2.x - q.x);
+      const nx = -Math.sin(aci) * yan * R(58, 72), ny = Math.cos(aci) * yan * R(58, 72), x = q.x + nx, y = q.y + ny;
+      if (Math.hypot(x - a.x, y - a.y) < 150 || Object.entries(M).some(([j, m2]) => j !== "meydan" && Math.hypot(x - m2.x, y - m2.y) < 130)) continue;
+      ev(c, x, y, R(54, 70), R(40, 50), aci + R(-0.08, 0.08), { baca: rnd() < 0.4, ton: rnd() < 0.5 ? "rgba(160, 70, 35, 0.3)" : "rgba(130, 55, 30, 0.4)" });
     }
   }
-  if (id === "okul") {
-    house({ x: p.x, z: p.z + 0.9, w: 3.6, d: 1.8, h: 1.5, wall: mat.wall2, roof: mat.roofDark, rot: 0.05 });
-    mesh(new THREE.CylinderGeometry(0.03, 0.03, 2.8, 6), mat.stone, 2.3, 1.4, 0.2, g);
-    mesh(new THREE.BoxGeometry(2.4, 0.04, 1.4), mat.path, -0.2, 0.05, -0.6, g).castShadow = false;
-  }
-  if (id === "muhtarlik") {
-    const h = house({ x: p.x + 0.4, z: p.z + 0.8, w: 2.2, d: 1.9, h: 2.3, wall: mat.wall, roof: mat.roof2, rot: -0.3 });
-    mesh(new THREE.BoxGeometry(1.2, 0.08, 0.5), mat.stone, 0, 1.25, 1.2, h);
-    mesh(new THREE.BoxGeometry(1.2, 0.3, 0.04), mat.woodDark, 0, 1.43, 1.44, h);
-  }
-  if (id === "bakkal") {
-    const h = house({ x: p.x - 0.2, z: p.z + 0.9, w: 2, d: 1.6, h: 1.25, wall: mat.wall3, roof: mat.roof, rot: 0.1 });
-    for (let i = 0; i < 5; i++) { const s = mesh(new THREE.BoxGeometry(0.4, 0.05, 0.65), i % 2 ? mat.awningB : mat.field2, -0.8 + i * 0.4, 1.05, -1.05, h); s.rotation.x = -0.35; }
-    for (const [cx, cz] of [[0.9, -0.6], [1.3, -0.4], [1.1, -0.2]]) mesh(new THREE.BoxGeometry(0.34, 0.24, 0.34), mat.wood, cx, 0.12, cz, g);
-  }
-  if (id === "degirmen") {
-    const y = HILL_TOP;
-    const tw = new THREE.Group(); tw.position.set(0, y - 0.1, 0); g.add(tw);
-    mesh(new THREE.CylinderGeometry(0.85, 1.15, 3.2, 14, 1, true), mat.ash, 0, 1.6, 0, tw);
-    mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.1, 14), mat.char, 0, 0.05, 0, tw);
-    // Yarısı çökmüş, kömürleşmiş çatı
-    const roof = mesh(new THREE.ConeGeometry(1.05, 1.1, 14, 1, true, 0, Math.PI * 1.15), mat.char, 0, 3.6, 0, tw); roof.rotation.z = 0.25;
-    // Kırık kanatlar
-    const hub = new THREE.Group(); hub.position.set(0, 2.6, 1.0); tw.add(hub);
-    for (const [a, l] of [[0.4, 2.2], [2.0, 1.2], [3.5, 2.4]]) { const b = mesh(new THREE.BoxGeometry(0.18, l, 0.05), mat.char, 0, l / 2, 0, new THREE.Group()); b.parent.rotation.z = a; hub.add(b.parent); }
-    for (const [rx, rz] of [[1.6, 0.6], [-1.3, 1.1], [0.9, -1.4]]) mesh(new THREE.DodecahedronGeometry(0.28, 0), mat.rock, rx, y - 0.05, rz, g);
-    smokeAt(new THREE.Vector3(p.x, y + 3.6, p.z), 0x8d8478, 0.35);
-    const fog = new THREE.Mesh(new THREE.TorusGeometry(2.6, 0.9, 8, 32), new THREE.MeshBasicMaterial({ color: 0xece4d8, transparent: true, opacity: 0.12, depthWrite: false }));
-    fog.rotation.x = Math.PI / 2; fog.position.set(0, y + 0.5, 0); g.add(fog); fogRing = fog;
-  }
+  const m = M;
+  ev(c, m.firin.x - 30, m.firin.y - 70, 110, 70, 0.12, { baca: true, avlu: 34 });
+  ev(c, m.kahvehane.x + 20, m.kahvehane.y - 66, 108, 66, -0.18, { avlu: 0 });
+  // Kahvehane önünde tente ve masalar
+  c.save(); c.translate(m.kahvehane.x + 26, m.kahvehane.y - 18); c.rotate(-0.18);
+  for (let i = 0; i < 6; i++) { c.fillStyle = i % 2 ? "#efe3c8" : "#b8452f"; c.fillRect(-54 + i * 18, -10, 18, 22); }
+  c.fillStyle = "rgba(0,0,0,0.25)"; c.fillRect(-54, 12, 108, 5);
+  for (const [tx, ty] of [[-30, 40], [10, 48], [44, 36]]) { c.fillStyle = "rgba(0,0,0,0.3)"; c.beginPath(); c.arc(tx + 3, ty + 3, 9, 0, 7); c.fill(); c.fillStyle = "#6b4a2c"; c.beginPath(); c.arc(tx, ty, 9, 0, 7); c.fill();
+    for (const k of [0, 2.1, 4.2]) { c.fillStyle = "#3c2a1a"; c.beginPath(); c.arc(tx + Math.cos(k) * 15, ty + Math.sin(k) * 15, 4, 0, 7); c.fill(); } }
+  c.restore();
+  ev(c, m.okul.x - 10, m.okul.y + 60, 170, 70, 0.04, { avlu: 60, ton: "rgba(120, 50, 30, 0.45)" });
+  ev(c, m.muhtarlik.x + 30, m.muhtarlik.y + 60, 104, 84, -0.28, { avlu: 30 });
+  ev(c, m.bakkal.x - 20, m.bakkal.y + 58, 92, 62, 0.08, {});
+  for (const [cx, cy] of [[40, 20], [58, 30], [48, 44]]) { c.fillStyle = "#7a5634"; c.fillRect(m.bakkal.x + cx, m.bakkal.y + cy, 14, 12); c.strokeStyle = "#3e2a18"; c.strokeRect(m.bakkal.x + cx, m.bakkal.y + cy, 14, 12); }
+  // Cami: kurşun kubbe, avlu, minare ve uzun gölgesi
+  const cm = m.cami;
+  c.save(); c.fillStyle = "rgba(196, 184, 160, 0.8)"; c.fillRect(cm.x - 110, cm.y - 40, 220, 150); c.strokeStyle = "rgba(120,110,90,0.8)"; c.lineWidth = 4; c.strokeRect(cm.x - 110, cm.y - 40, 220, 150);
+  c.fillStyle = "rgba(10,8,4,0.4)"; c.filter = "blur(4px)"; c.fillRect(cm.x - 60 + 10, cm.y - 100 + 9, 120, 110); c.filter = "none";
+  c.fillStyle = "#cfc6b4"; c.fillRect(cm.x - 60, cm.y - 100, 120, 110); c.strokeStyle = "rgba(80,70,55,0.7)"; c.lineWidth = 2; c.strokeRect(cm.x - 60, cm.y - 100, 120, 110);
+  const kg = c.createRadialGradient(cm.x - 14, cm.y - 60, 4, cm.x, cm.y - 45, 46); kg.addColorStop(0, "#e3e0d8"); kg.addColorStop(0.6, "#9a9a96"); kg.addColorStop(1, "#5d5f60");
+  c.fillStyle = kg; c.beginPath(); c.arc(cm.x, cm.y - 45, 44, 0, 7); c.fill(); c.strokeStyle = "rgba(50,50,50,0.6)"; c.stroke();
+  c.fillStyle = "#3a3a38"; c.beginPath(); c.arc(cm.x, cm.y - 45, 4, 0, 7); c.fill();
+  c.strokeStyle = "rgba(10,8,4,0.35)"; c.lineWidth = 12; c.lineCap = "round"; c.beginPath(); c.moveTo(cm.x + 78, cm.y - 70); c.lineTo(cm.x + 200, cm.y + 10); c.stroke();
+  c.fillStyle = "#e6dfcf"; c.beginPath(); c.arc(cm.x + 78, cm.y - 70, 12, 0, 7); c.fill(); c.strokeStyle = "rgba(60,55,45,0.8)"; c.lineWidth = 2; c.stroke();
+  c.fillStyle = "#6c6e70"; c.beginPath(); c.arc(cm.x + 78, cm.y - 70, 6, 0, 7); c.fill();
+  c.restore();
+  // Şadırvan
+  const md = m.meydan; c.fillStyle = "#bdb4a0"; c.beginPath(); c.arc(md.x + 40, md.y + 34, 20, 0, 7); c.fill(); c.fillStyle = "#4d7f8f"; c.beginPath(); c.arc(md.x + 40, md.y + 34, 14, 0, 7); c.fill();
+  // Yanık değirmen: kararmış kule, çökmüş çatı, kırık kanatlar
+  const d = m.degirmen; c.save();
+  c.fillStyle = "rgba(10,8,4,0.45)"; c.filter = "blur(5px)"; c.beginPath(); c.arc(d.x + 14, d.y + 12, 46, 0, 7); c.fill(); c.filter = "none";
+  c.fillStyle = "#3a332c"; c.beginPath(); c.arc(d.x, d.y, 44, 0, 7); c.fill();
+  c.fillStyle = "#1c1814"; c.beginPath(); c.arc(d.x, d.y, 34, 0, 7); c.fill();
+  c.fillStyle = "#4b3f33"; c.beginPath(); c.moveTo(d.x, d.y); c.arc(d.x, d.y, 34, -2.2, 0.6); c.closePath(); c.fill();
+  c.strokeStyle = "#2a231c"; c.lineWidth = 8; c.lineCap = "round";
+  for (const [a, l] of [[0.5, 90], [2.2, 46], [3.9, 84]]) { c.beginPath(); c.moveTo(d.x, d.y); c.lineTo(d.x + Math.cos(a) * l, d.y + Math.sin(a) * l); c.stroke(); }
+  c.restore();
 }
 
-// Hafif duman parçacıkları
-const smokes = [];
-let fogRing = null;
-function smokeAt(pos, color, opacity = 0.5) {
-  for (let i = 0; i < 7; i++) {
-    const s = new THREE.Mesh(new THREE.IcosahedronGeometry(0.22, 0), new THREE.MeshStandardMaterial({ color, transparent: true, opacity, depthWrite: false, roughness: 1 }));
-    s.userData = { base: pos.clone(), t: i / 7, op: opacity }; island.add(s); smokes.push(s);
-  }
-}
-
-function decor() {
-  // Kasabanın dolgu evleri, selviler, tarlalar ve çit
-  const fillers = [[-9.5, -4.5, 0.4], [-11, -1.5, -0.2], [-9.2, 2.8, 0.3], [-8.5, 6.8, -0.1], [-3.5, 8.8, 0.2], [4, 9, -0.3], [7.8, 6.3, 0.1],
-    [10.3, 2.6, -0.4], [-7.8, -6.5, 0.25], [4.8, -7.6, -0.15], [-12.4, 4.6, 0.5], [12.6, 6.4, 0.2]];
-  const walls = [mat.wall, mat.wall2, mat.wall3], roofs = [mat.roof, mat.roof2, mat.roofDark];
-  fillers.forEach(([x, z, r], i) => house({ x, z, rot: r, w: 1.4 + (i % 3) * 0.3, d: 1.3 + (i % 2) * 0.3, h: 1.1 + (i % 4) * 0.12, wall: walls[i % 3], roof: roofs[(i + 1) % 3], chimney: i % 3 === 0 }));
-  for (const [x, z, k, s] of [[-7.5, -2, "round", 1], [-12.5, -5.5, "cypress", 1.1], [-13.2, 0.5, "cypress", 1], [-8, 7.4, "round", 1.1], [1, 8.5, "cypress", 1],
-    [6.4, 8.6, "round", 0.9], [12.2, -0.6, "cypress", 1.1], [5.2, -6.2, "round", 1], [-1.5, -7, "cypress", 1.2], [8.6, -2.6, "round", 0.8], [14.5, 3, "round", 1], [-7.6, 1, "cypress", 0.9]])
-    tree(x, z, s, k);
-  for (const [x, z, w, d, m, r] of [[-13, -9.2, 5, 3, mat.field, 0.05], [-7.5, -9.6, 4, 2.4, mat.field2, -0.05], [14.4, 9.2, 4.5, 2.6, mat.field, 0.1], [9.2, 9.7, 3.4, 2, mat.field2, 0]]) {
-    const f = mesh(new THREE.BoxGeometry(w, 0.08, d), m, x, 0.06, z, island); f.rotation.y = r; f.castShadow = false;
-  }
-}
-
-// ——— Gün ışığı ———
-const SKY = [
-  { h: 6, top: 0x9fb4c7, bot: 0xf2c79a, sun: 0xffc48a, si: 1.4, hi: 0.55 },
-  { h: 9, top: 0x8fbbe0, bot: 0xe9e3d2, sun: 0xfff0d6, si: 2.4, hi: 0.9 },
-  { h: 13, top: 0x7fb2e2, bot: 0xe6ecef, sun: 0xffffff, si: 2.7, hi: 1.0 },
-  { h: 17, top: 0x8fb0cf, bot: 0xf1d9b0, sun: 0xffdcaa, si: 2.2, hi: 0.85 },
-  { h: 19.5, top: 0x41557a, bot: 0xe89a62, sun: 0xff9a5a, si: 1.3, hi: 0.5 },
-  { h: 21.5, top: 0x141d33, bot: 0x3a3550, sun: 0x8fa3d6, si: 0.35, hi: 0.22 },
-];
-const skyCanvas = document.createElement("canvas"); skyCanvas.width = 2; skyCanvas.height = 256;
-const skyTex = new THREE.CanvasTexture(skyCanvas); skyTex.colorSpace = THREE.SRGBColorSpace; scene.background = skyTex;
-let hourShown = 8, hourTarget = 8;
-const lerpC = (a, b, t) => new THREE.Color(a).lerp(new THREE.Color(b), t);
-function applyHour(h) {
-  let i = SKY.findIndex((k) => k.h > h); if (i <= 0) i = i === 0 ? 1 : SKY.length - 1;
-  const a = SKY[i - 1], b = SKY[i], t = THREE.MathUtils.clamp((h - a.h) / (b.h - a.h), 0, 1);
-  const top = lerpC(a.top, b.top, t), bot = lerpC(a.bot, b.bot, t);
-  const ctx = skyCanvas.getContext("2d"), gr = ctx.createLinearGradient(0, 0, 0, 256);
-  gr.addColorStop(0, "#" + top.getHexString()); gr.addColorStop(1, "#" + bot.getHexString()); ctx.fillStyle = gr; ctx.fillRect(0, 0, 2, 256); skyTex.needsUpdate = true;
-  sun.color.copy(lerpC(a.sun, b.sun, t)); sun.intensity = THREE.MathUtils.lerp(a.si, b.si, t);
-  hemi.intensity = THREE.MathUtils.lerp(a.hi, b.hi, t); hemi.color.copy(bot).lerp(new THREE.Color(0xffffff), 0.4);
-  // Güneş doğudan (+x) batıya (-x) geçer
-  const ang = THREE.MathUtils.mapLinear(h, 6, 20, 0.15, Math.PI - 0.15);
-  sun.position.set(Math.cos(ang) * 40, Math.max(4, Math.sin(ang) * 38), 14); sun.target.position.set(0, 0, 0);
-  const dusk = THREE.MathUtils.clamp((h - 17.5) / 2.5, 0, 1);
-  mat.glow.emissiveIntensity = dusk * 2.2;
-  renderer.toneMappingExposure = 1.05 - dusk * 0.15;
-  scene.fog.color.copy(bot).multiplyScalar(0.45);
-}
+// ——— Ekran ve kamera ———
+const cv = $("map"), cx = cv.getContext("2d");
+let cam = { x: 1330, y: 760, z: 1 }, zMin = 1;
+let ilkBoyut = true;
+function boyut() { cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; zMin = Math.max(innerWidth / W, innerHeight / H); cam.z = ilkBoyut ? zMin * 1.04 : Math.max(cam.z, zMin); ilkBoyut = false; sinirla(); }
+function sinirla() { const hw = innerWidth / 2 / cam.z, hh = innerHeight / 2 / cam.z; cam.x = Math.min(W - hw, Math.max(hw, cam.x)); cam.y = Math.min(H - hh, Math.max(hh, cam.y)); }
+addEventListener("resize", boyut);
+let surukle = null;
+cv.addEventListener("pointerdown", (e) => { surukle = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, hareket: 0 }; cv.setPointerCapture(e.pointerId); });
+cv.addEventListener("pointermove", (e) => { if (!surukle) return; const dx = e.clientX - surukle.x, dy = e.clientY - surukle.y; surukle.hareket = Math.hypot(dx, dy); cam.x = surukle.cx - dx / cam.z; cam.y = surukle.cy - dy / cam.z; sinirla(); });
+cv.addEventListener("pointerup", (e) => { if (surukle && surukle.hareket < 5) tikla(e.clientX, e.clientY); surukle = null; });
+cv.addEventListener("wheel", (e) => { e.preventDefault(); const once = ekranDunya(e.clientX, e.clientY); cam.z = Math.min(zMin * 2.6, Math.max(zMin, cam.z * Math.exp(-e.deltaY * 0.0015)));
+  const sonra = ekranDunya(e.clientX, e.clientY); cam.x += once.x - sonra.x; cam.y += once.y - sonra.y; sinirla(); }, { passive: false });
+const ekranDunya = (sx, sy) => ({ x: cam.x + (sx - innerWidth / 2) / cam.z, y: cam.y + (sy - innerHeight / 2) / cam.z });
 
 // ——— Sakinler ———
-const people = {};
-const labels = document.getElementById("labels");
-function personMesh(color, id) {
-  const g = new THREE.Group();
-  const body = mesh(new THREE.CapsuleGeometry(0.2, 0.42, 4, 10), M(color), 0, 0.42, 0, g);
-  mesh(new THREE.SphereGeometry(0.17, 14, 10), mat.skin, 0, 0.98, 0, g);
-  if (id === "huseyin") mesh(new THREE.CylinderGeometry(0.15, 0.17, 0.12, 12), mat.wall, 0, 1.12, 0, g);
-  if (id === "kemal") mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.04, 12), mat.woodDark, 0, 1.11, 0, g);
-  if (id === "ayse") { const sc = mesh(new THREE.SphereGeometry(0.19, 14, 10, 0, Math.PI * 2, 0, Math.PI / 1.7), M(0xc9a26b), 0, 1.0, -0.01, g); }
-  const ring = new THREE.Mesh(new THREE.RingGeometry(0.32, 0.4, 24), new THREE.MeshBasicMaterial({ color: 0xffd38a, transparent: true, opacity: 0, side: THREE.DoubleSide }));
-  ring.rotation.x = -Math.PI / 2; ring.position.y = 0.03; g.add(ring);
-  g.userData.ring = ring; g.userData.body = body;
-  island.add(g); return g;
-}
-function slot(i, n) { if (n === 1) return [0.9, 1.2]; const r = 1.1 + n * 0.12, a = (i / n) * Math.PI * 2 + 0.6; return [Math.cos(a) * r * 1.2, Math.sin(a) * r]; }
+const kisi = {};
+let durum = null, secili = null, akis = [], olcum = [], cizildi = false;
 
-let state = null, selected = null, built = false;
-function build(s) {
-  for (const [id, m] of Object.entries(s.mekanlar)) places[id] = W(m.x, m.y);
-  for (const [id, p] of Object.entries(places)) if (id !== "meydan") road(places.meydan, p, id === "degirmen" ? 0.6 : 0.9);
-  for (const [id, p] of Object.entries(places)) buildPlace(id, p);
-  decor();
-  for (const [id, m] of Object.entries(s.mekanlar)) {
-    const el = document.createElement("div"); el.className = "placename" + (id === "degirmen" ? " degirmen" : ""); el.textContent = m.ad; labels.appendChild(el);
-    places[id].label = el;
-  }
-  for (const [id, r] of Object.entries(s.sakinler)) {
-    const g = personMesh(new THREE.Color(r.renk), id);
-    const tag = document.createElement("div"); tag.className = "tag"; tag.textContent = r.ad; labels.appendChild(tag);
-    const bub = document.createElement("div"); bub.className = "bubble"; bub.style.opacity = 0; labels.appendChild(bub);
-    people[id] = { g, tag, bub, from: new THREE.Vector3(), to: new THREE.Vector3(), t: 1 };
-    const p = places[r.yer]; g.position.set(p.x + 0.9, heightAt(p), p.z + 1.2); people[id].to.copy(g.position);
-  }
-  built = true;
+function yolNoktasi(a, b, id, t) {
+  const k = window.yolKontrol?.[id]; if (!k) return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+  const u = 1 - t; return { x: u * u * a.x + 2 * u * t * k.x + t * t * b.x, y: u * u * a.y + 2 * u * t * k.y + t * t * b.y };
 }
+// İki mekan arası yürüyüş: meydana in, sonra hedef yola çık
+function guzergah(from, to) {
+  const M = mekan, pts = [];
+  if (from !== "meydan") for (let i = 0; i <= 10; i++) pts.push(yolNoktasi(M.meydan, M[from], from, 1 - i / 10));
+  if (to !== "meydan") for (let i = 0; i <= 10; i++) pts.push(yolNoktasi(M.meydan, M[to], to, i / 10));
+  return pts.length ? pts : [M.meydan];
+}
+function yuva(yer, i, n) { const p = mekan[yer]; if (n === 1) return { x: p.x + 34, y: p.y + 30 }; const a = (i / n) * Math.PI * 2 + 0.4, r = 44 + n * 5; return { x: p.x + Math.cos(a) * r * 1.2, y: p.y + Math.sin(a) * r * 0.85 + 20 }; }
 
-function placePeople(s) {
-  const groups = {};
-  for (const [id, r] of Object.entries(s.sakinler)) (groups[r.yer] ||= []).push(id);
-  for (const [yer, ids] of Object.entries(groups)) ids.forEach((id, i) => {
-    const [dx, dz] = slot(i, ids.length), p = places[yer];
-    const target = new THREE.Vector3(p.x + dx, 0, p.z + dz); target.y = heightAt(target) + (yer === "degirmen" ? 0 : 0);
-    const P = people[id];
-    if (target.distanceTo(P.to) > 0.05) { P.from.copy(P.g.position); P.to.copy(target); P.t = 0; }
-    const r = s.sakinler[id];
-    P.bub.innerHTML = r.soz ? `<b>${r.ad}</b>${r.soz.metin}` : "";
-    P.showBubble = !!r.soz && (ids.length <= 3 || selected === id);
-    P.busy = s.durum === "dusunuyor";
+function yerlestir(s) {
+  const gruplar = {};
+  for (const [id, r] of Object.entries(s.sakinler)) (gruplar[r.yer] ||= []).push(id);
+  for (const [yer, ids] of Object.entries(gruplar)) ids.forEach((id, i) => {
+    const hedef = yuva(yer, i, ids.length), k = kisi[id];
+    if (!k) { kisi[id] = { x: hedef.x, y: hedef.y, yer, yol: null, t: 1 }; return; }
+    if (k.yer !== yer) { const g = guzergah(k.yer, yer); k.yol = [{ x: k.x, y: k.y }, ...g, hedef]; k.t = 0; k.yer = yer; }
+    else if (Math.hypot(k.x - hedef.x, k.y - hedef.y) > 2 && !k.yol) { k.yol = [{ x: k.x, y: k.y }, hedef]; k.t = 0; }
   });
 }
 
-// ——— Arayüz ———
-const $ = (id) => document.getElementById(id);
-const VAKIT = (h) => h < 11 ? "sabah" : h < 15 ? "öğle" : h < 18 ? "ikindi" : "akşam";
-function renderCards(s) {
-  const busy = s.durum === "dusunuyor";
-  $("cards").innerHTML = Object.entries(s.sakinler).map(([id, r]) => `
-    <div class="row${selected === id ? " sel" : ""}${busy ? " busy" : ""}" data-id="${id}">
-      <i class="dot" style="background:${r.renk}"></i>
-      <span class="name">${r.ad}<span class="role">${r.unvan}</span></span>
-      <span class="where">${busy ? "düşünüyor" : s.mekanlar[r.yer].ad}</span>
-    </div>
-    ${selected === id ? `<div class="detail">
-      <div class="act">${r.eylem}</div>
+// Meslek amblemleri (sancağın üstünde)
+const AMBLEM = {
+  ayse: (c) => { c.beginPath(); c.ellipse(0, 0, 7, 4.5, 0, 0, 7); c.fill(); c.strokeStyle = "rgba(0,0,0,0.5)"; c.lineWidth = 1; for (const k of [-3, 0, 3]) { c.beginPath(); c.moveTo(k - 1.5, -3); c.lineTo(k + 1.5, 3); c.stroke(); } },
+  kemal: (c) => { c.lineWidth = 1.8; c.beginPath(); c.arc(0, 0, 5.5, 0, 7); c.stroke(); c.beginPath(); c.arc(0, 0, 2.2, 0, 7); c.fill(); },
+  riza: (c) => { c.fillRect(-5, -2, 8, 7); c.lineWidth = 1.5; c.beginPath(); c.arc(4, 1.5, 2.5, -1.5, 1.5); c.stroke(); c.beginPath(); c.moveTo(-2, -4); c.quadraticCurveTo(-4, -6, -2, -8); c.stroke(); },
+  elif: (c) => { c.beginPath(); c.moveTo(0, -4); c.lineTo(-7, -5); c.lineTo(-7, 4); c.lineTo(0, 5); c.lineTo(7, 4); c.lineTo(7, -5); c.closePath(); c.fill(); c.strokeStyle = "rgba(0,0,0,0.5)"; c.lineWidth = 1; c.beginPath(); c.moveTo(0, -4); c.lineTo(0, 5); c.stroke(); },
+  huseyin: (c) => { c.beginPath(); c.arc(0, 0, 6, 0.6, 5.7); c.arc(2.2, 0, 4.6, 5.4, 0.9, true); c.closePath(); c.fill(); },
+  mert: (c) => { c.beginPath(); c.moveTo(-6, -1); c.lineTo(6, -1); c.lineTo(4, 6); c.lineTo(-4, 6); c.closePath(); c.fill(); c.lineWidth = 1.5; c.beginPath(); c.arc(0, -1, 4.5, Math.PI, 0); c.stroke(); },
+};
+
+function kisiCiz(id, r, k, zaman) {
+  const c = cx, dusunuyor = durum?.durum === "dusunuyor", sec = secili === id, soluk = secili && !sec;
+  const yuru = k.yol && k.t < 1;
+  c.save(); c.translate(k.x, k.y); c.scale(2, 2); c.globalAlpha = soluk ? 0.45 : 1;
+  if (sec) { c.strokeStyle = "rgba(240, 190, 90, 0.95)"; c.lineWidth = 3; c.beginPath(); c.ellipse(0, 4, 22, 11, 0, 0, 7); c.stroke(); }
+  c.fillStyle = "rgba(0,0,0,0.4)"; c.beginPath(); c.ellipse(4, 5, 11, 6, 0, 0, 7); c.fill();
+  // Tepeden figür: omuzlar ve baş
+  const sall = yuru ? Math.sin(zaman * 14) * 1.6 : 0;
+  c.fillStyle = r.renk; c.beginPath(); c.ellipse(sall * 0.3, 0, 10, 7, 0, 0, 7); c.fill(); c.strokeStyle = "rgba(0,0,0,0.45)"; c.lineWidth = 1.2; c.stroke();
+  c.fillStyle = id === "huseyin" ? "#f3efe6" : id === "ayse" ? "#c9a26b" : "#6b4a33"; c.beginPath(); c.arc(sall * 0.3, -1, 4.6, 0, 7); c.fill();
+  // Sancak direği ve dalgalanan bayrak
+  const dalga = Math.sin(zaman * 3 + id.length) * 2.2;
+  c.strokeStyle = "#3a2b1c"; c.lineWidth = 2; c.beginPath(); c.moveTo(6, -2); c.lineTo(6, -46); c.stroke();
+  c.fillStyle = r.renk; c.beginPath(); c.moveTo(6, -46); c.quadraticCurveTo(18, -48 + dalga, 32, -45 + dalga); c.lineTo(32, -26 + dalga); c.quadraticCurveTo(18, -29 + dalga, 6, -27); c.closePath(); c.fill();
+  c.strokeStyle = "rgba(0,0,0,0.5)"; c.lineWidth = 1; c.stroke();
+  c.save(); c.translate(19, -36 + dalga * 0.6); c.fillStyle = "rgba(255, 250, 238, 0.95)"; c.strokeStyle = "rgba(255, 250, 238, 0.95)"; (AMBLEM[id] || (() => {}))(c); c.restore();
+  if (dusunuyor) { for (let i = 0; i < 3; i++) { c.fillStyle = `rgba(250, 230, 180, ${0.35 + 0.6 * Math.max(0, Math.sin(zaman * 4 - i * 0.7))})`; c.beginPath(); c.arc(12 + i * 7, -54, 2.2, 0, 7); c.fill(); } }
+  // Ad
+  const fs = Math.max(6, 7.5 / Math.sqrt(cam.z / zMin));
+  c.font = `700 ${fs}px "Source Sans 3", sans-serif`; c.textAlign = "center"; c.lineWidth = 3.5; c.strokeStyle = "rgba(15, 10, 5, 0.85)"; c.fillStyle = "#f8edd6";
+  c.lineWidth = 2.6; c.strokeText(r.ad, 0, 21); c.fillText(r.ad, 0, 21);
+  c.restore();
+}
+
+function mekanAdlari() {
+  const c = cx; c.save(); c.textAlign = "center"; c.font = `700 ${Math.max(11, 13 / Math.sqrt(cam.z / zMin))}px "Source Sans 3", sans-serif`;
+  const kayma = { firin: [-30, 0], kahvehane: [20, 0], okul: [-10, 130], muhtarlik: [30, 128], bakkal: [-20, 110], cami: [0, 96], meydan: [0, 118], degirmen: [0, 76] };
+  for (const [id, m] of Object.entries(durum.mekanlar)) {
+    const p = mekan[id], [dx, dy] = kayma[id] || [0, 60];
+    const yaz = m.ad.toLocaleUpperCase("tr").split("").join(" ");
+    c.lineWidth = 4; c.strokeStyle = "rgba(15,10,5,0.8)"; c.fillStyle = id === "degirmen" ? "#f0b89a" : "rgba(250, 238, 210, 0.92)";
+    c.strokeText(yaz, p.x + dx, p.y + dy); c.fillText(yaz, p.x + dx, p.y + dy);
+  }
+  c.restore();
+}
+
+// Gün ışığı: saate göre renk ve gece pencere ışıkları
+let saatGoster = 8, saatHedef = 8;
+function isik() {
+  const h = saatGoster, c = cx;
+  const ton = h < 9 ? ["rgba(255, 200, 150, 0.16)", "soft-light"] : h < 16 ? null : h < 18.5 ? ["rgba(255, 170, 90, 0.18)", "soft-light"] : null;
+  if (ton) { c.globalCompositeOperation = ton[1]; c.fillStyle = ton[0]; c.fillRect(0, 0, W, H); }
+  const aksam = Math.max(0, Math.min(1, (h - 18) / 2.5));
+  if (aksam > 0) {
+    c.globalCompositeOperation = "multiply"; c.fillStyle = `rgba(${Math.round(255 - 140 * aksam)}, ${Math.round(255 - 125 * aksam)}, ${Math.round(255 - 70 * aksam)}, 1)`; c.fillRect(0, 0, W, H);
+    c.globalCompositeOperation = "lighter";
+    for (const e of evler) { const g = c.createRadialGradient(e.x, e.y, 0, e.x, e.y, 34); g.addColorStop(0, `rgba(255, 180, 80, ${0.35 * aksam})`); g.addColorStop(1, "rgba(255,180,80,0)"); c.fillStyle = g; c.fillRect(e.x - 34, e.y - 34, 68, 68); }
+  }
+  c.globalCompositeOperation = "source-over";
+}
+
+// Duman: fırın bacası ve yanık değirmen
+const duman = Array.from({ length: 26 }, (_, i) => ({ t: i / 26, k: i % 2 }));
+function dumanCiz(dt) {
+  const c = cx, kaynak = [{ x: mekan.firin.x - 30 + 26, y: mekan.firin.y - 82, renk: "225, 220, 210", op: 0.18 }, { x: mekan.degirmen.x, y: mekan.degirmen.y, renk: "120, 112, 100", op: 0.22 }];
+  for (const d of duman) { d.t = (d.t + dt * 0.05) % 1; const s = kaynak[d.k], r = 5 + d.t * 22;
+    c.fillStyle = `rgba(${s.renk}, ${s.op * (1 - d.t)})`; c.beginPath(); c.arc(s.x + d.t * 70 + Math.sin(d.t * 9) * 6, s.y - d.t * 60, r, 0, 7); c.fill(); }
+}
+
+// Anlatıcı olayının yeri: nabız atan halka
+function olayHalkasi(zaman) {
+  const ev = akis.filter((e) => e.tip === "anlatici").pop();
+  if (!ev || ev.gun !== durum.gun || ev.tur < durum.tur) return;
+  const p = mekan[ev.yer] || mekan.meydan, t = (zaman % 2.4) / 2.4;
+  cx.strokeStyle = `rgba(240, 150, 80, ${0.9 * (1 - t)})`; cx.lineWidth = 4; cx.beginPath(); cx.arc(p.x, p.y, 40 + t * 120, 0, 7); cx.stroke();
+}
+
+let onceki = performance.now();
+function dongu(simdi) {
+  const dt = Math.min(0.05, (simdi - onceki) / 1000); onceki = simdi; const zaman = simdi / 1000;
+  saatGoster += (saatHedef - saatGoster) * Math.min(1, dt * 0.6);
+  for (const k of Object.values(kisi)) if (k.yol && k.t < 1) {
+    k.t = Math.min(1, k.t + dt / 4.5); const n = k.yol.length - 1, f = k.t * n, i = Math.min(n - 1, Math.floor(f)), u = f - i;
+    const a = k.yol[i], b = k.yol[i + 1]; k.x = a.x + (b.x - a.x) * u; k.y = a.y + (b.y - a.y) * u; if (k.t >= 1) k.yol = null;
+  }
+  const c = cx; c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = "#1a140e"; c.fillRect(0, 0, cv.width, cv.height);
+  if (cizildi) {
+    const d = devicePixelRatio; c.setTransform(cam.z * d, 0, 0, cam.z * d, (innerWidth / 2 - cam.x * cam.z) * d, (innerHeight / 2 - cam.y * cam.z) * d);
+    c.drawImage(arazi, 0, 0); isik(); dumanCiz(dt); olayHalkasi(zaman); mekanAdlari();
+    const sira = Object.entries(durum.sakinler).sort((a, b) => (kisi[a[0]]?.y ?? 0) - (kisi[b[0]]?.y ?? 0));
+    for (const [id, r] of sira) if (kisi[id]) kisiCiz(id, r, kisi[id], zaman);
+  }
+  requestAnimationFrame(dongu);
+}
+
+function tikla(sx, sy) {
+  const p = ekranDunya(sx, sy); let en = null, d = 40 / cam.z * zMin;
+  for (const [id, k] of Object.entries(kisi)) { const m = Math.hypot(k.x - p.x, k.y - 20 - p.y); if (m < d) { d = m; en = id; } }
+  secili = en === secili ? null : en; karakterler(); if (secili) { $("dKarakter").classList.remove("hidden"); $("tKarakter").classList.add("on"); }
+}
+
+// ——— Paneller ———
+const ad = (id) => durum.sakinler[id]?.ad ?? id;
+function konusmalar() {
+  const turlar = new Map();
+  for (const e of akis) { const k = `${e.gun}-${e.tur}`; if (!turlar.has(k)) turlar.set(k, { gun: e.gun, saat: e.saat, tur: e.tur, olay: [], soz: [] }); const t = turlar.get(k); if (e.tip === "anlatici") t.olay.push(e); if (e.tip === "soz") t.soz.push(e); }
+  const liste = [...turlar.values()].reverse();
+  let html = durum.durum === "dusunuyor" ? `<div class="tur now"><div class="tur-h">${durum.gun}. gün, ${durum.saat.replace(":", ".")}</div><div class="alone">Sakinler karar veriyor…</div></div>` : "";
+  let sayi = 0;
+  for (const t of liste) {
+    if (!t.olay.length && !t.soz.length) continue;
+    // Aynı yerde konuşanlar bir sohbet
+    const gruplar = {};
+    for (const s of t.soz) (gruplar[s.yer] ||= []).push(s);
+    html += `<div class="tur"><div class="tur-h">${t.gun}. gün, ${VAKIT(parseInt(t.saat))} ${t.saat.replace(":", ".")}</div>`;
+    for (const o of t.olay) html += `<div class="event"><b>KASABADA${o.yer !== "herkes" ? ", " + (durum.mekanlar[o.yer]?.ad ?? "").toLocaleUpperCase("tr") : ""}</b>${o.metin}</div>`;
+    for (const [yer, sozler] of Object.entries(gruplar)) {
+      const kisiler = [...new Set(sozler.flatMap((s) => [s.kim, ...(s.duyanlar || []), ...(s.kime && s.kime !== "herkes" ? [s.kime] : [])]))].filter((id) => durum.sakinler[id]);
+      const baslik = kisiler.length > 1 ? kisiler.slice(0, -1).map(ad).join(", ") + " ile " + ad(kisiler.at(-1)) : ad(kisiler[0]) + " kendi kendine";
+      html += `<div class="convo"><div class="convo-h"><span class="who">${baslik}</span><span class="at">${durum.mekanlar[yer]?.ad ?? ""}</span></div>`;
+      for (const s of sozler) { sayi++; html += `<div class="line${s.ulasmadi ? " miss" : ""}"><span class="n" style="color:${durum.sakinler[s.kim]?.renk}">${ad(s.kim)}:</span><span class="m">${s.metin}</span></div>`; }
+      html += `</div>`;
+    }
+    html += `</div>`;
+  }
+  $("konusmalar").innerHTML = html || '<div class="empty">Kasaba henüz uyanmadı.</div>';
+  $("konusmaSayi").textContent = sayi ? `${sayi} replik` : "";
+}
+
+const hafizalar = {};
+async function hafizaGetir(id) {
+  try { const t = await (await fetch(`/dunya/sakinler/${id}.md`, { cache: "no-store" })).text();
+    hafizalar[id] = (t.split("## Hafıza")[1] || "").split("\n").filter((l) => l.startsWith("- ")).map((l) => l.slice(2)).reverse().slice(0, 8); } catch { hafizalar[id] = []; }
+  karakterler();
+}
+function karakterler() {
+  const busy = durum.durum === "dusunuyor";
+  $("karakterler").innerHTML = Object.entries(durum.sakinler).map(([id, r]) => {
+    const sec = secili === id; if (sec && !hafizalar[id]) hafizaGetir(id);
+    return `<div class="char${sec ? " sel" : ""}${busy ? " busy" : ""}" data-id="${id}" style="--c:${r.renk}">
+      <div class="char-top"><span class="stripe"></span>
+        <div class="char-main"><span class="nm">${r.ad}</span><span class="rl">${r.unvan}, ${r.yas}</span><div class="act">${r.eylem}</div></div>
+        <div class="char-side"><span class="where">${busy ? "karar veriyor" : durum.mekanlar[r.yer].ad}</span><span class="mood" style="--m:${ruhRengi(r.ruh)}">${r.ruh}</span></div>
+      </div>
       ${r.ic_ses ? `<div class="inner">${r.ic_ses}</div>` : ""}
-      <div class="mood">Ruh hali: ${r.ruh}</div>
-      <div class="trust">${Object.entries(r.guven).map(([o, v]) => `<div class="tr"><span>${s.sakinler[o].ad}</span><div class="bar"><i style="width:${v}%;background:${s.sakinler[o].renk}"></i></div><b>${v}</b></div>`).join("")}</div>
-    </div>` : ""}`).join("") + (selected ? "" : '<div class="hint">Ayrıntı için bir sakine tıkla</div>');
-  document.querySelectorAll(".row").forEach((c) => c.onclick = () => { selected = selected === c.dataset.id ? null : c.dataset.id; lastKey = ""; tick(); });
-}
-let feedMode = "konusma";
-document.querySelectorAll(".tabs button").forEach((b) => b.onclick = () => { feedMode = b.dataset.f; document.querySelectorAll(".tabs button").forEach((x) => x.classList.toggle("on", x === b)); lastKey = ""; tick(); });
-function renderFeed(s, akis) {
-  if (!akis.length) { $("feed").innerHTML = '<div class="empty">Kasaba henüz uyanmadı.</div>'; return; }
-  const name = (id) => s.sakinler[id]?.ad ?? id;
-  const list = feedMode === "hepsi" ? akis : akis.filter((e) => e.tip === "soz" || e.tip === "anlatici");
-  if (!list.length) { $("feed").innerHTML = '<div class="empty">Henüz kimse konuşmadı.</div>'; return; }
-  $("feed").innerHTML = list.slice().reverse().slice(0, 150).map((e) => {
-    const who = e.tip === "anlatici" ? "KASABADA" : e.tip === "soz" && e.kime && e.kime !== "herkes" ? `${name(e.kim)} → ${name(e.kime)}` : e.tip === "ic_ses" ? `${name(e.kim)} (içinden)` : name(e.kim);
-    if (e.ulasmadi) return `<div class="ev ${e.tip}"><span class="t">${e.saat.replace(":", ".")}</span><span class="w">${who}</span><span class="m" style="opacity:.55">${e.metin}</span></div>`;
-    return `<div class="ev ${e.tip}"><span class="t">${e.saat.replace(":", ".")}</span><span class="w">${who}</span><span class="m">${e.metin}</span></div>`;
+      ${sec ? `<div class="detail"><h4>Kime ne kadar güveniyor</h4>${Object.entries(r.guven).map(([o, v]) => `<div class="tr"><span>${ad(o)}</span><div class="bar"><i style="width:${v}%;background:${durum.sakinler[o].renk}"></i></div><b>${v}</b></div>`).join("")}
+        <h4>Hafızası</h4>${(hafizalar[id] || []).map((m) => { const [z, ...g] = m.split(": "); return `<div class="mem"><span>${z}</span>${g.join(": ")}</div>`; }).join("") || '<div class="mem">Henüz bir şey hatırlamıyor.</div>'}</div>` : ""}
+    </div>`;
   }).join("");
-}
-function renderMetrics(olcum) {
-  const t = olcum.filter((o) => o.sure_sn != null), sum = t.reduce((a, o) => a + o.sure_sn, 0);
-  const fmt = (sn) => sn >= 60 ? `${Math.floor(sn / 60)} dk ${sn % 60} sn` : `${sn} sn`;
+  document.querySelectorAll(".char").forEach((el) => el.onclick = () => { secili = secili === el.dataset.id ? null : el.dataset.id; if (secili) delete hafizalar[secili]; karakterler();
+    if (secili) { const k = kisi[secili]; cam.x = k.x; cam.y = k.y; sinirla(); } });
+  const t = olcum.filter((o) => o.sure_sn != null);
   $("mCalls").textContent = olcum.reduce((a, o) => a + (o.cevap || 0), 0);
-  $("mAvg").textContent = t.length ? fmt(Math.round(sum / t.length)) : "–";
-  $("mTotal").textContent = t.length ? fmt(sum) : "–";
+  $("mAvg").textContent = t.length ? Math.round(t.reduce((a, o) => a + o.sure_sn, 0) / t.length) + " sn" : "–";
 }
 
-// Anlatıcı olayının yeri: altın halka
-const eventRing = new THREE.Mesh(new THREE.RingGeometry(0.6, 0.8, 40), new THREE.MeshBasicMaterial({ color: 0xffc35a, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false }));
-eventRing.rotation.x = -Math.PI / 2; island.add(eventRing);
-let eventOn = false;
+function cekmece(btn, dr) { $(btn).onclick = () => { $(dr).classList.toggle("hidden"); $(btn).classList.toggle("on"); }; }
+cekmece("tKonusma", "dKonusma"); cekmece("tKarakter", "dKarakter");
+addEventListener("keydown", (e) => { if (e.target.tagName === "INPUT") return; if (e.key === "k" || e.key === "K") $("tKonusma").click(); if (e.key === "c" || e.key === "C") $("tKarakter").click(); });
 
+// ——— Veri ———
 const jsonl = (t) => t.trim().split("\n").filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
-let lastKey = "";
-async function tick() {
+let anahtar = "";
+async function cek() {
   try {
-    const [s, a, o] = await Promise.all([
-      fetch("/dunya/kasaba.json").then((r) => r.json()),
-      fetch("/dunya/akis.jsonl").then((r) => r.ok ? r.text() : ""),
-      fetch("/dunya/olcum.jsonl").then((r) => r.ok ? r.text() : ""),
-    ]);
-    if (!built) build(s);
-    const key = JSON.stringify(s) + a.length + selected; if (key === lastKey) return; lastKey = key;
-    state = s;
-    const h = parseInt(s.saat); hourTarget = s.durum === "gun_bitti" ? 20.5 : h;
-    $("when").textContent = s.durum === "gun_bitti" ? `${s.gun - 1}. gün bitti, akşam` : `${s.gun}. gün, ${VAKIT(h)} ${s.saat.replace(":", ".")}`;
-    const live = s.durum === "dusunuyor";
-    $("status").classList.toggle("live", live);
-    $("statusText").textContent = live ? "Sakinler düşünüyor" : s.durum === "gun_bitti" ? "Kasaba uykuya daldı" : s.tur ? "Sıradaki saati bekliyor" : "Kasaba uyuyor";
-    const akis = jsonl(a);
-    renderCards(s); placePeople(s); renderFeed(s, akis); renderMetrics(jsonl(o));
-    const ev = akis.filter((e) => e.tip === "anlatici").pop();
-    eventOn = !!ev && ev.gun === s.gun && ev.tur >= s.tur;
-    if (ev) { const p = places[ev.yer] ?? places.meydan; eventRing.position.set(p.x, heightAt(p) + (ev.yer === "degirmen" ? HILL_TOP - heightAt(p) : 0) + 0.08, p.z); }
-  } catch (e) { $("statusText").textContent = "Sunucuya ulaşılamıyor"; }
+    const [s, a, o] = await Promise.all([fetch("/dunya/kasaba.json", { cache: "no-store" }).then((r) => r.json()),
+      fetch("/dunya/akis.jsonl", { cache: "no-store" }).then((r) => r.ok ? r.text() : ""), fetch("/dunya/olcum.jsonl", { cache: "no-store" }).then((r) => r.ok ? r.text() : "")]);
+    const yeni = JSON.stringify(s) + a.length; if (yeni === anahtar) return; anahtar = yeni;
+    durum = s; akis = jsonl(a); olcum = jsonl(o);
+    if (!cizildi) { araziCiz(s); cizildi = true; }
+    const h = parseInt(s.saat); saatHedef = s.durum === "gun_bitti" ? 20.5 : h;
+    $("time").textContent = s.durum === "gun_bitti" ? `${s.gun - 1}. gün bitti` : `${s.gun}. gün, ${VAKIT(h)} ${s.saat.replace(":", ".")}`;
+    $("state").textContent = s.durum === "dusunuyor" ? "sakinler karar veriyor" : "";
+    yerlestir(s); for (const id of Object.keys(hafizalar)) delete hafizalar[id]; konusmalar(); karakterler();
+  } catch (e) { $("state").textContent = "sunucuya ulaşılamıyor"; }
 }
-
-// ——— Döngü ———
-const clock = new THREE.Clock();
-const v = new THREE.Vector3();
-function project(pos, el, dy = 0) {
-  v.copy(pos); v.y += dy; island.localToWorld(v); v.project(camera);
-  const vis = v.z < 1 && Math.abs(v.x) < 1.1 && Math.abs(v.y) < 1.1;
-  el.style.left = ((v.x + 1) / 2 * innerWidth) + "px"; el.style.top = ((1 - v.y) / 2 * innerHeight) + "px";
-  return vis;
-}
-function loop() {
-  const dt = Math.min(clock.getDelta(), 0.05), time = clock.elapsedTime;
-  hourShown += (hourTarget - hourShown) * Math.min(1, dt * 0.8); applyHour(hourShown);
-  for (const s of smokes) { const u = s.userData; u.t = (u.t + dt * 0.12) % 1; s.position.set(u.base.x + Math.sin(u.t * 6 + u.base.z) * 0.3 * u.t, u.base.y + u.t * 2.4, u.base.z + u.t * 0.4); s.scale.setScalar(0.6 + u.t * 1.8); s.material.opacity = u.op * (1 - u.t); }
-  if (fogRing) fogRing.rotation.z += dt * 0.05;
-  for (const [id, P] of Object.entries(people)) {
-    if (P.t < 1) {
-      P.t = Math.min(1, P.t + dt / 3.2); const e = P.t < 0.5 ? 2 * P.t * P.t : 1 - Math.pow(-2 * P.t + 2, 2) / 2;
-      P.g.position.lerpVectors(P.from, P.to, e); P.g.position.y = heightAt(P.g.position) + Math.abs(Math.sin(P.t * 22)) * 0.04;
-      const dir = P.to.clone().sub(P.from); if (dir.lengthSq() > 0.01) P.g.rotation.y = Math.atan2(dir.x, dir.z);
-    } else P.g.position.y = heightAt(P.g.position) + 0;
-    const ring = P.g.userData.ring; ring.material.opacity = selected === id ? 0.9 : P.busy ? 0.35 + Math.sin(time * 4 + id.length) * 0.25 : 0;
-    const dim = selected && selected !== id;
-    const speaking = P.showBubble && P.t >= 1;
-    P.tag.style.opacity = project(P.g.position, P.tag, 1.35) && !speaking ? (dim ? 0.35 : 1) : 0;
-    P.bub.style.opacity = project(P.g.position, P.bub, 1.75) && P.showBubble && P.t >= 1 ? (dim ? 0.3 : 1) : 0;
-    P.bub.style.marginTop = "-18px";
-  }
-  // Konuşma balonları üst üste binmesin: aşağıdakinden başlayıp çakışanı yukarı it
-  const shown = Object.values(people).flatMap((P) => [P.bub, P.tag]).filter((el) => el.style.opacity !== "0")
-    .map((el) => ({ el, x: parseFloat(el.style.left), y: parseFloat(el.style.top), w: el.offsetWidth, h: el.offsetHeight }))
-    .sort((a, b) => b.y - a.y);
-  const placed = [];
-  for (const b of shown) {
-    let moved = true;
-    while (moved) { moved = false; for (const o of placed) if (Math.abs(b.x - o.x) < (b.w + o.w) / 2 + 6 && b.y > o.y - o.h - 6 && b.y - b.h < o.y + 6) { b.y = o.y - o.h - 8; moved = true; } }
-    b.el.style.top = b.y + "px"; placed.push(b);
-  }
-  for (const [id, p] of Object.entries(places)) if (p.label) { const pos = p.clone(); pos.y = (id === "degirmen" ? HILL_TOP : 0) + 0.1; p.label.style.opacity = project(pos.add(new THREE.Vector3(0, 0, 2.6)), p.label) ? 0.8 : 0; }
-  eventRing.material.opacity = eventOn ? 0.55 + Math.sin(time * 3) * 0.35 : 0; eventRing.scale.setScalar(1 + (time % 2) * 0.6);
-  controls.update(); renderer.render(scene, camera); requestAnimationFrame(loop);
-}
-addEventListener("resize", () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
-tick(); setInterval(tick, 2000); loop();
+yukle().then(() => { boyut(); cek(); setInterval(cek, 2000); requestAnimationFrame(dongu); });
 </script>
 </body>
 </html>

@@ -1,0 +1,25 @@
+{
+  "ad": "Değirmenköy",
+  "gun": 1,
+  "saat": "08:00",
+  "tur": 0,
+  "durum": "bekliyor",
+  "mekanlar": {
+    "meydan": { "ad": "Meydan", "x": 500, "y": 330 },
+    "firin": { "ad": "Fırın", "x": 330, "y": 230 },
+    "kahvehane": { "ad": "Kahvehane", "x": 640, "y": 240 },
+    "cami": { "ad": "Cami", "x": 500, "y": 140 },
+    "okul": { "ad": "Okul", "x": 300, "y": 450 },
+    "muhtarlik": { "ad": "Muhtarlık", "x": 700, "y": 430 },
+    "bakkal": { "ad": "Bakkal", "x": 500, "y": 520 },
+    "degirmen": { "ad": "Eski Değirmen", "x": 900, "y": 120 }
+  },
+  "sakinler": {
+    "ayse": { "ad": "Ayşe", "unvan": "Fırıncı", "yas": 52, "renk": "#e8b04a", "yer": "firin", "ruh": "neşeli", "eylem": "Sabah ekmeğini fırından çıkarıyor.", "ic_ses": "", "soz": null, "guven": { "kemal": 60, "riza": 75, "elif": 85, "huseyin": 90, "mert": 65 } },
+    "kemal": { "ad": "Kemal", "unvan": "Muhtar", "yas": 61, "renk": "#c9584a", "yer": "muhtarlik", "ruh": "ciddi", "eylem": "Muhtarlığı açıyor.", "ic_ses": "", "soz": null, "guven": { "ayse": 70, "riza": 65, "elif": 40, "huseyin": 60, "mert": 45 } },
+    "riza": { "ad": "Rıza", "unvan": "Kahveci", "yas": 45, "renk": "#7fa36b", "yer": "kahvehane", "ruh": "sakin", "eylem": "Ocağı yakıp ilk çayı demliyor.", "ic_ses": "", "soz": null, "guven": { "ayse": 80, "kemal": 60, "elif": 55, "huseyin": 85, "mert": 50 } },
+    "elif": { "ad": "Elif", "unvan": "Öğretmen", "yas": 29, "renk": "#6aa3d8", "yer": "okul", "ruh": "meraklı", "eylem": "Sınıfı derse hazırlıyor.", "ic_ses": "", "soz": null, "guven": { "ayse": 85, "kemal": 40, "riza": 50, "huseyin": 75, "mert": 60 } },
+    "huseyin": { "ad": "Hüseyin Hoca", "unvan": "İmam", "yas": 58, "renk": "#d9d4c7", "yer": "cami", "ruh": "huzurlu", "eylem": "Kuşluk vaktinde caminin avlusunu süpürüyor.", "ic_ses": "", "soz": null, "guven": { "ayse": 85, "kemal": 55, "riza": 80, "elif": 75, "mert": 65 } },
+    "mert": { "ad": "Mert", "unvan": "Bakkal", "yas": 34, "renk": "#4fb3a9", "yer": "bakkal", "ruh": "gergin", "eylem": "Bakkalın kepengini kaldırıyor, telefonuna bakıyor.", "ic_ses": "", "soz": null, "guven": { "ayse": 60, "kemal": 50, "riza": 55, "elif": 70, "huseyin": 60 } }
+  }
+}

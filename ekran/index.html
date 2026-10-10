@@ -306,16 +306,24 @@ function binalar(c, M) {
 
 // ——— Ekran ve kamera ———
 const cv = $("map"), cx = cv.getContext("2d");
-let cam = { x: 1330, y: 760, z: 1 }, zMin = 1;
+let cam = { x: 1440, y: 790, z: 1 }, zMin = 1, zFit = 1;
 let ilkBoyut = true;
-function boyut() { cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; zMin = Math.max(innerWidth / W, innerHeight / H); cam.z = ilkBoyut ? zMin * 1.04 : Math.max(cam.z, zMin); ilkBoyut = false; sinirla(); }
-function sinirla() { const hw = innerWidth / 2 / cam.z, hh = innerHeight / 2 / cam.z; cam.x = Math.min(W - hw, Math.max(hw, cam.x)); cam.y = Math.min(H - hh, Math.max(hh, cam.y)); }
+// Ekran boyutu ne olursa olsun bütün kasaba sığar; tekerlekle haritanın tamamına kadar uzaklaşılır.
+function boyut() {
+  cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio;
+  zMin = Math.min(innerWidth / W, innerHeight / H) * 0.95;
+  zFit = Math.min(innerWidth / 1960, innerHeight / 1310);
+  if (ilkBoyut) { cam.z = zFit; cam.x = 1440; cam.y = 790; ilkBoyut = false; } else cam.z = Math.max(cam.z, zMin);
+  sinirla();
+}
+function sinirla() { const hw = innerWidth / 2 / cam.z, hh = innerHeight / 2 / cam.z;
+  cam.x = hw * 2 >= W ? W / 2 : Math.min(W - hw, Math.max(hw, cam.x)); cam.y = hh * 2 >= H ? H / 2 : Math.min(H - hh, Math.max(hh, cam.y)); }
 addEventListener("resize", boyut);
 let surukle = null;
 cv.addEventListener("pointerdown", (e) => { surukle = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, hareket: 0 }; cv.setPointerCapture(e.pointerId); });
 cv.addEventListener("pointermove", (e) => { if (!surukle) return; const dx = e.clientX - surukle.x, dy = e.clientY - surukle.y; surukle.hareket = Math.hypot(dx, dy); cam.x = surukle.cx - dx / cam.z; cam.y = surukle.cy - dy / cam.z; sinirla(); });
 cv.addEventListener("pointerup", (e) => { if (surukle && surukle.hareket < 5) tikla(e.clientX, e.clientY); surukle = null; });
-cv.addEventListener("wheel", (e) => { e.preventDefault(); const once = ekranDunya(e.clientX, e.clientY); cam.z = Math.min(zMin * 2.6, Math.max(zMin, cam.z * Math.exp(-e.deltaY * 0.0015)));
+cv.addEventListener("wheel", (e) => { e.preventDefault(); const once = ekranDunya(e.clientX, e.clientY); cam.z = Math.min(zFit * 3, Math.max(zMin, cam.z * Math.exp(-e.deltaY * 0.0015)));
   const sonra = ekranDunya(e.clientX, e.clientY); cam.x += once.x - sonra.x; cam.y += once.y - sonra.y; sinirla(); }, { passive: false });
 const ekranDunya = (sx, sy) => ({ x: cam.x + (sx - innerWidth / 2) / cam.z, y: cam.y + (sy - innerHeight / 2) / cam.z });
 
@@ -375,14 +383,14 @@ function kisiCiz(id, r, k, zaman) {
   c.save(); c.translate(19, -36 + dalga * 0.6); c.fillStyle = "rgba(255, 250, 238, 0.95)"; c.strokeStyle = "rgba(255, 250, 238, 0.95)"; (AMBLEM[id] || (() => {}))(c); c.restore();
   if (dusunuyor) { for (let i = 0; i < 3; i++) { c.fillStyle = `rgba(250, 230, 180, ${0.35 + 0.6 * Math.max(0, Math.sin(zaman * 4 - i * 0.7))})`; c.beginPath(); c.arc(12 + i * 7, -54, 2.2, 0, 7); c.fill(); } }
   // Ad
-  const fs = Math.max(6, 7.5 / Math.sqrt(cam.z / zMin));
+  const fs = Math.max(6, 7.5 / Math.sqrt(cam.z / zFit));
   c.font = `700 ${fs}px "Source Sans 3", sans-serif`; c.textAlign = "center"; c.lineWidth = 3.5; c.strokeStyle = "rgba(15, 10, 5, 0.85)"; c.fillStyle = "#f8edd6";
   c.lineWidth = 2.6; c.strokeText(r.ad, 0, 21); c.fillText(r.ad, 0, 21);
   c.restore();
 }
 
 function mekanAdlari() {
-  const c = cx; c.save(); c.textAlign = "center"; c.font = `700 ${Math.max(11, 13 / Math.sqrt(cam.z / zMin))}px "Source Sans 3", sans-serif`;
+  const c = cx; c.save(); c.textAlign = "center"; c.font = `700 ${Math.max(11, 13 / Math.sqrt(cam.z / zFit))}px "Source Sans 3", sans-serif`;
   const kayma = { firin: [-30, 0], kahvehane: [20, 0], okul: [-10, 130], muhtarlik: [30, 128], bakkal: [-20, 110], cami: [0, 96], meydan: [0, 118], degirmen: [0, 76] };
   for (const [id, m] of Object.entries(durum.mekanlar)) {
     const p = mekan[id], [dx, dy] = kayma[id] || [0, 60];
@@ -443,7 +451,7 @@ function dongu(simdi) {
 }
 
 function tikla(sx, sy) {
-  const p = ekranDunya(sx, sy); let en = null, d = 40 / cam.z * zMin;
+  const p = ekranDunya(sx, sy); let en = null, d = 40 / cam.z * zFit;
   for (const [id, k] of Object.entries(kisi)) { const m = Math.hypot(k.x - p.x, k.y - 20 - p.y); if (m < d) { d = m; en = id; } }
   secili = en === secili ? null : en; karakterler(); if (secili) { $("dKarakter").classList.remove("hidden"); $("tKarakter").classList.add("on"); }
 }

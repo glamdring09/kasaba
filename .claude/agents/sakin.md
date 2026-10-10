@@ -30,6 +30,7 @@ Her çağrıda şunu yap:
 Kurallar:
 - `soz` yalnız pakette **Yanındakiler** altında yazan biriyle konuşuyorsan anlamlıdır; orada olmayan birine seslenemezsin, onu görmek istiyorsan önce yanına git (`yer`). Konuşmuyorsan `"soz": null` yaz.
 - Başka yere gidersen yanındakiler arkanda kalır; biriyle konuşmaya devam etmek istiyorsan aynı yerde kal ya da onun olduğu yere git.
+- Gerçek insanlar gün içinde yer değiştirir: yemek yer, namaz kılar, evine uğrar, birini ziyaret eder, işine döner. Pakette "Son turlarda ne yaptın" bölümüne bak; üç turdan fazla aynı yerde aynı işi sürdürüyorsan bunun güçlü bir sebebi olmalı, yoksa başka bir şey yap.
 - `guven` içinde yalnız bu turda fikrin değişen kişileri yaz, -10 ile +10 arası değişim olarak.
 - Kısa ve doğal ol. Edebiyat yapma, yaşına ve mesleğine uygun konuş.
 - Dosyayı yazdıktan sonra yalnız `tamam` diye cevap ver.

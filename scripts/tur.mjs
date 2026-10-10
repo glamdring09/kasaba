@@ -19,6 +19,15 @@ const oku = () => JSON.parse(readFileSync(DURUM, "utf8"));
 const yaz = (s) => writeFileSync(DURUM, JSON.stringify(s, null, 2));
 const akisa = (k) => appendFileSync(AKIS, JSON.stringify({ zaman: Date.now(), ...k }) + "\n");
 const akisOku = () => (existsSync(AKIS) ? readFileSync(AKIS, "utf8").trim().split("\n").filter(Boolean).map((l) => JSON.parse(l)) : []);
+// Bir sakinin son turlarda nerede ne yaptığı (en yeni sonda) ve kaç turdur aynı yerde olduğu.
+// Aynı yerde kalma sayacı yalnız o günün turlarını sayar; gece bir sonraki güne taşınmaz.
+function gecmis(akis, id, gun, n = 3) {
+  const eylemler = akis.filter((e) => e.tip === "eylem" && e.kim === id);
+  const bugun = eylemler.filter((e) => e.gun === gun);
+  let ayni = 0;
+  for (let i = bugun.length - 1; i >= 0 && bugun[i].yer === bugun[bugun.length - 1].yer; i--) ayni++;
+  return { son: eylemler.slice(-n), ayni };
+}
 const temizle = (dir) => { rmSync(dir, { recursive: true, force: true }); mkdirSync(dir, { recursive: true }); };
 
 function arg(ad) {
@@ -58,6 +67,9 @@ function hazirla() {
     const duydugu = sonTur.filter((e) => e.tip === "soz" && e.kim !== id && (e.yer === k.yer || e.kime === id) && e.duyanlar?.includes(id))
       .map((e) => `- ${s.sakinler[e.kim].ad}${e.kime && e.kime !== "herkes" ? ` (${s.sakinler[e.kime]?.ad ?? e.kime} için)` : ""}: "${e.metin}"`);
     const gordugu = buTurOlay.filter((e) => e.yer === "herkes" || e.yer === k.yer).map((e) => `- ${e.metin}`);
+    const { son, ayni } = gecmis(akis, id, s.gun);
+    const gecmisMetni = son.map((e) => `- Gün ${e.gun} ${e.saat}, ${s.mekanlar[e.yer]?.ad ?? e.yer}: ${e.metin}`).join("\n");
+    const tekrarUyari = ayni >= 3 ? `\nBugün ${ayni} turdur (${ayni * 2} saattir) aynı yerdesin. İşin buradaysa doğal olabilir; değilse ya da hep aynı şeyi yapıyorsan başka bir şey yapmayı düşün.` : "";
     const digerleri = Object.entries(s.sakinler).filter(([o]) => o !== id)
       .map(([o, ok]) => `${o} = ${ok.unvan} ${ok.ad} (güvenin ${k.guven[o] ?? 50}/100)`).join("; ");
 
@@ -66,6 +78,9 @@ function hazirla() {
 ## Şu an
 Gün ${s.gun}, saat ${s.saat}. Kasaba: ${s.ad}. Bulunduğun yer: ${s.mekanlar[k.yer].ad} (${k.yer}).
 Ruh halin: ${k.ruh}. Son yaptığın: ${k.eylem}
+
+## Son turlarda ne yaptın
+${gecmisMetni || "- Gün yeni başladı."}${tekrarUyari}
 
 ## Yanındakiler
 ${yanindakiler.join("\n") || "- Kimse yok, yalnızsın."}
@@ -150,6 +165,8 @@ function ozet() {
   const akis = akisOku();
   const bugunOlay = akis.filter((k) => k.tip === "anlatici" && k.gun === s.gun).length;
   console.log(`\nGün ${s.gun}, sıradaki saat ${s.saat} (durum: ${s.durum}). Bugünkü anlatıcı olayı: ${bugunOlay}/3.`);
+  const takilan = Object.keys(s.sakinler).map((id) => [id, gecmis(akis, id, s.gun).ayni]).filter(([, n]) => n >= 3);
+  if (takilan.length) console.log(`Takılanlar (3+ turdur aynı yerde): ${takilan.map(([id, n]) => `${s.sakinler[id].ad} ${n} tur`).join(", ")}`);
   for (const [id, k] of Object.entries(s.sakinler)) {
     console.log(`- ${k.ad} @${k.yer} [${k.ruh}] ${k.eylem}${k.soz ? ` | "${k.soz.metin}"` : ""}${k.ic_ses ? ` | iç ses: ${k.ic_ses}` : ""}`);
   }

@@ -19,6 +19,9 @@ vermezsin, onların ağzına söz koymazsın. Kasabanın tamamı `dunya/` klasö
 1. `node scripts/tur.mjs ozet` çıktısına bak. Sakinler nerede, ne yapıyor, kim kiminle?
 2. Olay gerekip gerekmediğine karar ver. Günde en fazla 3 olay; çoğu tur olaysız geçer. Olay dünyada olan somut bir şeydir
    (bir eşya, bir ses, bir haber, bir yabancı), bir sakinin düşüncesi ya da sözü değildir.
+   - `ozet` çıktısında "Takılanlar" satırı varsa (3+ turdur aynı yerde kalan sakin), onu harekete geçirecek küçük ve somut
+     bir dünya olayını düşün: kapının kilitlenmesi, birinin onu çağırması, bir haber, bir ihtiyaç. Sakinin yerine karar verme,
+     yalnız dünyayı değiştir; günlük 3 olay sınırı geçerli.
    - Olay varsa: `node scripts/tur.mjs hazirla --olay "Olayın tek cümlelik anlatımı." --yer <mekan|herkes>`
    - Yoksa: `node scripts/tur.mjs hazirla`
 3. Altı sakini **tek mesajda, paralel** olarak `sakin` alt ajanıyla çağır (Agent aracı, `subagent_type: "sakin"`). Her

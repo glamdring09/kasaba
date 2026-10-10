@@ -117,7 +117,9 @@ function uygula() {
       cevaplar[id] = JSON.parse(ham);
     } catch { eksik.push(id); }
   }
-  // Önce herkes yerini alır, sonra sözler aynı yerdekilere duyulur.
+  // Konuşma iki saatin başında da (herkes eski yerindeyken) sonunda da (yeni yerinde) olabilir: ikisinden birinde aynı
+  // yerde olan duyar. Böylece "konuşup sonra gitmek" doğal kalır; yalnız hiç karşılaşmayanlara söz ulaşmaz.
+  const ilkYer = Object.fromEntries(Object.entries(s.sakinler).map(([id, k]) => [id, k.yer]));
   for (const [id, c] of Object.entries(cevaplar)) {
     const k = s.sakinler[id];
     if (c.yer && s.mekanlar[c.yer]) k.yer = c.yer;
@@ -134,11 +136,14 @@ function uygula() {
     const ortak = { gun: s.gun, saat: s.saat, tur, kim: id, yer: k.yer };
     akisa({ ...ortak, tip: "eylem", metin: k.eylem });
     if (k.soz) {
-      const duyanlar = Object.entries(s.sakinler).filter(([o, ok]) => o !== id && ok.yer === k.yer).map(([o]) => o);
-      // Herkes aynı anda hareket ettiği için seslenilen kişi o sırada başka yere gitmiş olabilir: söz ona ulaşmaz.
+      const basta = Object.keys(s.sakinler).filter((o) => o !== id && ilkYer[o] === ilkYer[id]);
+      const sonda = Object.entries(s.sakinler).filter(([o, ok]) => o !== id && ok.yer === k.yer).map(([o]) => o);
       const hedef = s.sakinler[k.soz.kime];
-      const ulasmadi = !!hedef && hedef.yer !== k.yer;
-      akisa({ ...ortak, tip: "soz", kime: k.soz.kime, metin: k.soz.metin, duyanlar, ...(ulasmadi && { ulasmadi: true }) });
+      // Seslenilen kişiyle başta karşılaştıysa konuşma oradadır; yoksa sondaki yerde.
+      const bastaKonustu = !!hedef && basta.includes(k.soz.kime) && !sonda.includes(k.soz.kime);
+      const duyanlar = bastaKonustu ? basta : sonda;
+      const ulasmadi = !!hedef && !basta.includes(k.soz.kime) && !sonda.includes(k.soz.kime);
+      akisa({ ...ortak, ...(bastaKonustu && { yer: ilkYer[id] }), tip: "soz", kime: k.soz.kime, metin: k.soz.metin, duyanlar, ...(ulasmadi && { ulasmadi: true }) });
       if (ulasmadi) {
         appendFileSync(D("sakinler", `${id}.md`), `- Gün ${s.gun} ${s.saat}: Seslendiğin ${hedef.ad} o sırada ${s.mekanlar[hedef.yer].ad} tarafındaydı, söylediğini duymadı.\n`);
         k.soz = { ...k.soz, ulasmadi: true };

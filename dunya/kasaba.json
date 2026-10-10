@@ -1,8 +1,8 @@
 {
   "ad": "Değirmenköy",
-  "gun": 2,
+  "gun": 3,
   "saat": "08:00",
-  "tur": 7,
+  "tur": 14,
   "durum": "gun_bitti",
   "mekanlar": {
     "meydan": {
@@ -52,20 +52,20 @@
       "unvan": "Fırıncı",
       "yas": 52,
       "renk": "#e8b04a",
-      "yer": "bakkal",
+      "yer": "kahvehane",
       "ruh": "meraklı",
-      "eylem": "Ayşe bakkalda Mert'le fotoğraftaki cipi konuşmaya devam eder, sonra akşam ezanına doğru fırına dönmek üzere ayrılır.",
-      "ic_ses": "Amcamın değirmenini bu fotoğrafın kim koyduğunu merak ediyorum, ama kimseye bunu söylemem.",
+      "eylem": "Ayşe kahvehanede çayını bitirene kadar oturur, sonra yarın sabah için hamur işi düşünerek fırına doğru yola çıkar.",
+      "ic_ses": "Mert'in cipi bu kadar geçiştirmesi bana hiç iyi gelmiyor, amcamın değirmeni de yine aklıma geliyor.",
       "soz": {
-        "kime": "mert",
-        "metin": "Mert oğlum, o cipi bilen birini bulursan bana da haber ver kuzum, aklım almıyor."
+        "kime": "kemal",
+        "metin": "Tamam Kemal Bey, kartı sana bırakıyorum ama bu adamın ne istediğini bana da bir gün anlatırsın, olur mu?"
       },
       "guven": {
-        "kemal": 60,
+        "kemal": 59,
         "riza": 74,
         "elif": 85,
         "huseyin": 90,
-        "mert": 68
+        "mert": 50
       }
     },
     "kemal": {
@@ -73,14 +73,17 @@
       "unvan": "Muhtar",
       "yas": 61,
       "renk": "#c9584a",
-      "yer": "muhtarlik",
+      "yer": "kahvehane",
       "ruh": "huzursuz",
-      "eylem": "Muhtar Kemal muhtarlıkta oturup Mert'i bekler, evrakların kalanını gözden geçirir ve çayını yudumlar.",
-      "ic_ses": "Mert gelip yine değirmeni sorarsa ne diyeceğimi bilmiyorum, bu iş bir gün mutlaka ortaya çıkacak.",
-      "soz": null,
+      "eylem": "Kemal kahvehanede çayından yudum alır, yabancının kartına bakmadan masanın kenarına itip Rıza'nın tavla taşlarını seyreder.",
+      "ic_ses": "Ayşe'nin gözüne bakamıyorum, Selim'in yeğeni olduğunu düşününce boğazım düğümleniyor.",
+      "soz": {
+        "kime": "ayse",
+        "metin": "Kızım, adam kendi işi için gelmiş, sen fırınına bak; bu meseleye bulaşmayalım."
+      },
       "guven": {
-        "ayse": 70,
-        "riza": 65,
+        "ayse": 69,
+        "riza": 66,
         "elif": 40,
         "huseyin": 60,
         "mert": 38
@@ -93,11 +96,11 @@
       "renk": "#7fa36b",
       "yer": "kahvehane",
       "ruh": "huzursuz",
-      "eylem": "Rıza kahvehanede tavla takımını toplar, radyonun haberini dinler ve Kemal'i beklemeye devam eder.",
-      "ic_ses": "Değirmen yolundaki o geceyi Kemal'e anlatmayacağım, belki de gerçekten yanlış gördüm.",
+      "eylem": "Rıza kahvehanede kalıp tavla taşlarını dizer, Kemal'le çayını içer ve radyoyu kısık sesle dinlemeye devam eder.",
+      "ic_ses": "O cipi bir daha görmek istemiyorum, yine o geceyi düşünmeye başladım.",
       "soz": {
         "kime": "kemal",
-        "metin": "Kemal, çay demledim, gel otur de bir şey anlatacağım."
+        "metin": "Kemal, o adamın kartını masada bırak, bu iş bizi ilgilendirmez, kapat konuyu."
       },
       "guven": {
         "ayse": 82,
@@ -114,11 +117,11 @@
       "renk": "#6aa3d8",
       "yer": "okul",
       "ruh": "kararlı",
-      "eylem": "Elif, okulun bodrumuna inip arşiv kutularını yeniden karıştırır ve eksik yılların kayıtlarını bulmaya çalışır.",
-      "ic_ses": "Ayşe neden hep konuyu değiştiriyor, bu eksik yılların arkasında ne var acaba?",
+      "eylem": "Elif bodrumda kalıp 1999 yılının öteki sayfalarını tek tek karıştırır, bulduklarını defterine yazar.",
+      "ic_ses": "Ayşe neden bu kadar kaçamak davranıyor, bu gazetenin başka bir hikayesi var mı diye düşünüyorum.",
       "soz": null,
       "guven": {
-        "ayse": 79,
+        "ayse": 77,
         "kemal": 40,
         "riza": 50,
         "huseyin": 75,
@@ -132,18 +135,15 @@
       "renk": "#d9d4c7",
       "yer": "cami",
       "ruh": "düşünceli",
-      "eylem": "Hüseyin Hoca akşam namazını kıldırır, sonra avluda cemaatle kısa bir sohbet eder ve sohbetin sonunda yalnız kalıp düşünceli düşünceli oturur.",
-      "ic_ses": "Nuri Bey'in sözü yine aklıma geldi; o gece değirmende kim vardı acaba, ve cipin oraya ne işi vardı?",
-      "soz": {
-        "kime": "mert",
-        "metin": "Mert oğlum, yarın sabah camiye uğra, bir çay içip konuşalım, içindekini bana anlat."
-      },
+      "eylem": "Hüseyin Hoca akşam namazını caminin avlusunda kılar, sonra bir süre avluda oturup düşünür.",
+      "ic_ses": "Nuri Bey'in sözü hâlâ aklımda, ama bu emaneti kimseye taşımak bana düşmez.",
+      "soz": null,
       "guven": {
         "ayse": 85,
         "kemal": 53,
         "riza": 80,
         "elif": 75,
-        "mert": 65
+        "mert": 71
       }
     },
     "mert": {
@@ -152,19 +152,16 @@
       "yas": 34,
       "renk": "#4fb3a9",
       "yer": "bakkal",
-      "ruh": "huysuz",
-      "eylem": "Mert tezgâhın arkasında oturup telefonundan toptancıya giden borç mesajlarına bakar ve Ayşe'nin cipe dair sorusunu geçiştirir.",
-      "ic_ses": "Toptancıya bu ay da ödeme yapamayacağım, muhtar da resmi evrak diye ağzımı açtırmadı.",
-      "soz": {
-        "kime": "ayse",
-        "metin": "Ayşe Abla, o cipi ben görmedim, değirmen yoluna da uğramadım, boş ver şimdi."
-      },
+      "ruh": "huzursuz",
+      "eylem": "Mert değirmenden çıkıp dükkâna döner, kepenkleri indirmeden önce toptancının mesajlarını bir daha okur.",
+      "ic_ses": "Şu lambanın yatırımcıyla ne ilgisi var, bunu kafamda çevirmeden uyuyamam.",
+      "soz": null,
       "guven": {
-        "ayse": 60,
+        "ayse": 55,
         "kemal": 42,
         "riza": 55,
         "elif": 70,
-        "huseyin": 60
+        "huseyin": 61
       }
     }
   }

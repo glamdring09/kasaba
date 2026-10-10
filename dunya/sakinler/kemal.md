@@ -26,3 +26,10 @@ konuyu kapatır, "eski meseleler" dersin. Ama vicdanın rahat değil.
 - Gün 1 16:00, Muhtarlık: Mert yatırımcıyı ve değirmen arazisini sordu, ben geçiştirdim ve ona resmi duyuru beklemesini söyledim.
 - Gün 1 18:00, Muhtarlık: Mert'e değirmen konusunu resmi duyuruya kadar kapattığımı söyledim, ama bu meselenin yeniden açılacağından korkuyorum.
 - Gün 1 20:00, Muhtarlık: Akşam 20:00'de muhtarlıkta yalnız oturup Mert'in gelmesini bekledim ve değirmen meselesinin yeniden açılmasından korktum.
+- Gün 2 08:00, Muhtarlık: Gün 2 sabahı muhtarlıkta yalnız oturup evrakları gözden geçirdim, Mert'in değirmen sorusundan hâlâ rahatsızım.
+- Gün 2 10:00, Muhtarlık: Sabah muhtarlıkta yalnız oturup evrakları bitirdim ve Mert'in değirmen sorusu yüzünden içim rahat etmedi.
+- Gün 2 12:00, Kahvehane: Gün 2 öğlene doğru muhtarlıkta yalnız kalıp evrakları bitirdim, Mert'in değirmen sorusu hâlâ aklımı kurcalıyor ve kahvehaneye gidip kulak misafiri olmaya karar verdim.
+- Gün 2 14:00, Kahvehane: Kahvehaneye yabancı bir adam geldi, değirmen arazisinin mirasçılarını ve eski zamanları hatırlayan birini aradığını söyledi, kartını masaya bıraktı.
+- Gün 2 16:00, Kahvehane: Gün 2 saat 16:00'da kahvehanede yabancının kartını okudum, Rıza'ya değirmen meselesinin yeniden açılmasından endişelendiğimi ima ettim.
+- Gün 2 18:00, Kahvehane: Yabancının kartı kahvehanede masadaydı, Ayşe'ye değirmen meselesini geçiştirdim ama içimdeki huzursuzluk arttı.
+- Gün 2 20:00, Kahvehane: Akşam kahvehanede yabancının kartı yüzünden Ayşe'yi geçiştirdim, değirmen konusunun yeniden açılmasından korkuyorum.

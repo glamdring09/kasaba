@@ -23,3 +23,12 @@ almak istediğini duydun; arazinin kime ait olduğunu bilen muhtarmış. Bu iş 
 - Gün 1 16:00, Muhtarlık: Muhtar Kemal yatırımcı ve arazi konusunda bilgi vermedi, resmi evrak şartını koydu ve Mert dükkâna dönmeye karar verdi.
 - Gün 1 18:00, Bakkal: Muhtar Kemal yatırımcı ve arazi hakkında hiçbir şey söylemedi, resmi evrak şartı koydu ve ben dükkâna dönerken borçlarımı düşündüm.
 - Gün 1 20:00, Bakkal: Muhtar Kemal yatırımcı ve arazi hakkında bir şey söylemedi, ben de dükkâna dönüp borçlarımı düşündüm.
+- Gün 2 08:00, Bakkal: Sabah bakkalda Ayşe'nin cip sorularını geçiştirdim ve toptancının borç mesajlarına bakarken yatırımcı işinin borcumu kapatıp kapatmayacağını düşündüm.
+- Gün 2 10:00, Bakkal: Sabah Ayşe'ye cipin kimin olduğunu bilmediğimi söyledim ama ısrarı bırakmadı, toptancının mesajları da canımı sıkıyor.
+- Gün 2 12:00: Seslendiğin Ayşe o sırada Kahvehane tarafındaydı, söylediğini duymadı.
+- Gün 2 12:00, Bakkal: Gün 2 12:00'de Ayşe'ye cipin kimin olduğunu bilmediğimi tekrar söyledim ve bakkalda kalıp toptancı mesajlarıyla uğraştım.
+- Gün 2 14:00, Bakkal: Gün 2 öğleden sonra Hüseyin Hoca bakkalda yanımda kaldı, toptancının borç mesajları yüzünden sinirliydim ve Ayşe Teyze meselesini konuşmak istemedim.
+- Gün 2 16:00: Seslendiğin Hüseyin Hoca o sırada Bakkal tarafındaydı, söylediğini duymadı.
+- Gün 2 16:00, Eski Değirmen: Hüseyin Hoca'nın nasihatine kızmadım ama toptancı mesajları yüzünden sinirliydim, akşamüstü değirmene bakmaya karar verdim.
+- Gün 2 18:00, Eski Değirmen: Eski Değirmen'de şirket etiketli kazıkların arasında yarı görünen paslı bir gaz lambası gördüm ve bunun yatırımcıyla ilgisi olabileceğini düşündüm.
+- Gün 2 20:00, Bakkal: Gün 2 akşamında Eski Değirmen'de kazıkların arasında paslı gaz lambası gördüm ve sonra dükkâna dönüp toptancı mesajlarıyla uğraşmaya karar verdim.

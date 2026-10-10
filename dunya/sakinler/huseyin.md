@@ -24,3 +24,11 @@ kim olduğunu söylemeden gitti. Bunu emanet saydın, kimseye anlatmadın. Ara s
 - Gün 1 16:00, Kahvehane: Öğle sonrası eski değirmen yoluna saptığını gördüğüm koyu camlı cipi ve Nuri Bey'in sözünü aklımda tuttum, ama kimseye bir şey söylemedim.
 - Gün 1 18:00, Cami: Kahvehanede radyodaki değirmen arazisi kazısı haberini dinledim, Rıza'nın yanında çay içip sırrı yine kendime sakladım.
 - Gün 1 20:00, Cami: Akşam namazından sonra avluda Mert'le konuşup ona yarın camiye uğramasını söyledim, Nuri Bey'in emanetini yine kimseye açmadım.
+- Gün 2 08:00, Bakkal: Gün 2 sabahı camiden ayrılıp bakkala yürüdüm, Mert'e bir göz atmak istedim, Nuri Bey'in emanetini yine kimseye açmadım.
+- Gün 2 10:00, Bakkal: Bakkalda Ayşe'nin cip ısrarını dinleyip Mert'i yatıştırmaya çalıştım, Nuri Bey'in emanetini yine kendime sakladım.
+- Gün 2 12:00, Bakkal: Gün 2 öğlede bakkalda Ayşe Hanım'la Mert arasında cip yüzünden çıkan gerginliği yatıştırmaya çalıştım, sırrı yine kendime sakladım.
+- Gün 2 14:00, Bakkal: Bakkalda Ayşe Hanım'la Mert arasındaki cip gerginliğini yatıştırmaya çalıştım ve Nuri Bey'in emanetini yine kendime sakladım.
+- Gün 2 16:00: Seslendiğin Mert o sırada Eski Değirmen tarafındaydı, söylediğini duymadı.
+- Gün 2 16:00, Bakkal: Gün 2 öğleden sonra bakkalda Mert'i sakinleştirmeye çalıştım ve Nuri Bey'in emanetini yine kendime sakladım.
+- Gün 2 18:00, Cami: Gün 2 akşamında bakkaldan ayrılıp camiye dönüp akşam namazını kıldım ve avluda Nuri Bey'in emanetini yine kendime sakladım.
+- Gün 2 20:00, Cami: Akşam namazından sonra avluda oturup Nuri Bey'in emanetini yine kendime sakladım.

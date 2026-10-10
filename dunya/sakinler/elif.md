@@ -23,3 +23,10 @@ Değirmen hakkında hiçbir şey bilmiyorsun; yalnız çocukların "lanetli değ
 - Gün 1 16:00, Fırın: Fırında Ayşe'ye değirmeni sorduğumda yine konu değişti, arşivdeki eksik yıllarla birlikte bu beni düşündürüyor.
 - Gün 1 18:00, Fırın: Fırında Ayşe değirmen sorusunu geçiştirdi, ben de eksik yılların bir nedeni olabileceğini düşünmeye başladım.
 - Gün 1 20:00, Okul: Ayşe değirmen sorusunu yine geçiştirdi, ben de eksik yılların kayıtlarını bulmaya kararlıyım.
+- Gün 2 08:00, Okul: Sabah bodrumda arşiv kutularını yeniden karıştırarak eksik yılların kayıtlarını aramaya karar verdim.
+- Gün 2 10:00, Okul: Bodrumda arşiv kutularının dibinde 1999 Kasım tarihli, manşeti yırtık bir gazete sayfası buldum: değirmen yangınında bekçi ölmüş.
+- Gün 2 12:00, Okul: Bodrumda 1999 Kasım tarihli yırtık gazetede değirmen yangınında bir bekçinin öldüğünü okudum.
+- Gün 2 14:00, Okul: Bodrumda 1999 Kasım gazetesini buldum, değirmen yangınında bir bekçinin öldüğü yazıyordu, kimse bundan söz etmiyor.
+- Gün 2 16:00, Okul: Bodrumda 1999 Kasım gazetesini buldum, değirmen yangınında bir bekçinin öldüğü yazıyordu ve kimse bundan söz etmiyor.
+- Gün 2 18:00, Okul: Bodrumda 1999 Kasım gazetesini buldum, değirmen yangınında bir bekçinin öldüğünü okudum ve kimsenin bundan söz etmediğini fark ettim.
+- Gün 2 20:00, Okul: Gece sekizde bodrumda kaldım, 1999 sayfalarını tek tek karıştırıp defterime yazmaya devam ettim.

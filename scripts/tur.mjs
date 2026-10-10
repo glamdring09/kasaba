@@ -125,7 +125,7 @@ function uygula() {
       const ulasmadi = !!hedef && hedef.yer !== k.yer;
       akisa({ ...ortak, tip: "soz", kime: k.soz.kime, metin: k.soz.metin, duyanlar, ...(ulasmadi && { ulasmadi: true }) });
       if (ulasmadi) {
-        appendFileSync(D("sakinler", `${id}.md`), `- Gün ${s.gun} ${s.saat}: ${hedef.ad}'a seslendin ama o sırada ${s.mekanlar[hedef.yer].ad} tarafındaydı, söylediğini duymadı.\n`);
+        appendFileSync(D("sakinler", `${id}.md`), `- Gün ${s.gun} ${s.saat}: Seslendiğin ${hedef.ad} o sırada ${s.mekanlar[hedef.yer].ad} tarafındaydı, söylediğini duymadı.\n`);
         k.soz = { ...k.soz, ulasmadi: true };
       }
     }

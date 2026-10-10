@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Değirmenköy Gözetim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07090b; --panel: rgba(16, 20, 24, 0.72); --line: rgba(220, 232, 240, 0.10); --line-2: rgba(220, 232, 240, 0.22);
+    --text: #e6ecf0; --text-2: #9aa7b0; --text-3: #5f6b73; --ice: #bfe3f2; --amber: #e3a446; --red: #d3584a;
+    --mono: "IBM Plex Mono", ui-monospace, monospace; --sans: "IBM Plex Sans", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); overflow: hidden; }
+  body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50;
+    background: repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0 1px, transparent 1px 3px); }
+  .app { display: grid; grid-template-columns: 1fr 420px; grid-template-rows: 56px 1fr 260px; height: 100%; gap: 1px; background: var(--line); }
+  header { grid-column: 1 / -1; display: flex; align-items: center; gap: 28px; padding: 0 24px; background: var(--bg); }
+  .brand { font-family: var(--mono); letter-spacing: 0.32em; font-size: 12px; color: var(--ice); }
+  .brand b { color: var(--text); font-weight: 500; }
+  .stat { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--text-3); text-transform: uppercase; }
+  .stat span { color: var(--text); margin-left: 8px; letter-spacing: 0.06em; }
+  .clock { font-family: var(--mono); font-size: 22px; color: var(--text); letter-spacing: 0.08em; }
+  .status { margin-left: auto; display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--text-2); }
+  .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--text-3); }
+  .status.live .pulse { background: var(--ice); box-shadow: 0 0 10px var(--ice); animation: p 1.2s ease-in-out infinite; }
+  @keyframes p { 50% { opacity: 0.25; } }
+
+  .map { position: relative; background: radial-gradient(ellipse at 55% 45%, #0e1418 0%, var(--bg) 70%); overflow: hidden; }
+  .map svg { width: 100%; height: 100%; display: block; }
+  .corner { position: absolute; font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--text-3); }
+  .corner.tl { top: 16px; left: 20px; } .corner.br { bottom: 14px; right: 20px; text-align: right; }
+
+  .side { background: var(--bg); overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; grid-row: 2 / 4; grid-column: 2; }
+  .side h3, .feed h3 { font-family: var(--mono); font-weight: 400; font-size: 10px; letter-spacing: 0.24em; color: var(--text-3); text-transform: uppercase; padding: 2px 4px 4px; }
+  .card { border: 1px solid var(--line); background: var(--panel); padding: 12px 14px; cursor: pointer; transition: border-color .25s, background .25s; position: relative; }
+  .card:hover { border-color: var(--line-2); }
+  .card.sel { border-color: var(--ice); background: rgba(191, 227, 242, 0.04); }
+  .card.thinking::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ice), transparent); animation: scan 1.6s linear infinite; }
+  @keyframes scan { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+  .card-top { display: flex; align-items: baseline; gap: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; align-self: center; }
+  .name { font-weight: 500; font-size: 14px; }
+  .role { font-size: 12px; color: var(--text-3); }
+  .where { margin-left: auto; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--text-2); text-transform: uppercase; }
+  .act { font-size: 12.5px; color: var(--text-2); margin-top: 7px; line-height: 1.45; }
+  .inner { font-size: 12.5px; color: var(--ice); margin-top: 6px; line-height: 1.45; font-style: italic; opacity: 0.85; }
+  .mood { font-family: var(--mono); font-size: 10px; color: var(--text-3); letter-spacing: 0.12em; margin-top: 8px; text-transform: uppercase; }
+  .trust { display: none; margin-top: 10px; gap: 5px; flex-direction: column; }
+  .card.sel .trust { display: flex; }
+  .tr { display: grid; grid-template-columns: 74px 1fr 26px; align-items: center; gap: 8px; font-size: 11px; color: var(--text-2); }
+  .bar { height: 3px; background: var(--line); position: relative; }
+  .bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--text-2); transition: width .6s; }
+  .tr b { font-family: var(--mono); font-weight: 400; font-size: 10px; color: var(--text-3); text-align: right; }
+
+  .feed { background: var(--bg); overflow-y: auto; padding: 12px 20px 20px; }
+  .ev { display: grid; grid-template-columns: 72px 112px 1fr; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 13px; line-height: 1.45; animation: in .5s ease-out; }
+  @keyframes in { from { opacity: 0; transform: translateY(-4px); } }
+  .ev .t { font-family: var(--mono); font-size: 10.5px; color: var(--text-3); padding-top: 2px; }
+  .ev .w { font-size: 12px; color: var(--text-2); }
+  .ev.anlatici { color: var(--amber); }
+  .ev.anlatici .w { color: var(--amber); font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; padding-top: 2px; }
+  .ev.soz .m::before { content: "“"; color: var(--text-3); } .ev.soz .m::after { content: "”"; color: var(--text-3); }
+  .ev.ic_ses .m { color: var(--ice); font-style: italic; opacity: 0.8; }
+  .ev.eylem .m { color: var(--text-2); }
+  .empty { color: var(--text-3); font-size: 13px; padding: 12px 0; }
+
+  .metrics { display: flex; gap: 22px; padding: 10px 4px 2px; border-top: 1px solid var(--line); margin-top: auto; }
+  .metric { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; color: var(--text-3); text-transform: uppercase; }
+  .metric span { display: block; font-size: 18px; color: var(--text); letter-spacing: 0.04em; margin-top: 4px; }
+
+  .place-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; fill: var(--text-3); text-transform: uppercase; }
+  .res { transition: transform 1.8s cubic-bezier(.65,0,.35,1); }
+  .res text { font-family: var(--sans); font-size: 11px; fill: var(--text); }
+  .res .halo { animation: halo 2.4s ease-out infinite; }
+  @keyframes halo { from { r: 6; opacity: .6; } to { r: 22; opacity: 0; } }
+  .bubble { font-family: var(--sans); font-size: 11px; fill: var(--text-2); font-style: italic; }
+  .event-ring { animation: ring 3s ease-out infinite; }
+  @keyframes ring { from { r: 10; opacity: .9; } to { r: 70; opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand"><b>DEĞİRMENKÖY</b> &nbsp;/ GÖZETİM</div>
+    <div class="stat">Gün<span id="gun">1</span></div>
+    <div class="clock" id="saat">08:00</div>
+    <div class="stat">Tur<span id="tur">0</span></div>
+    <div class="status" id="status"><i class="pulse"></i><span id="statusText">BEKLİYOR</span></div>
+  </header>
+
+  <section class="map">
+    <svg id="map" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="corner tl">SEKTÖR 01 &nbsp; KASABA MERKEZİ</div>
+    <div class="corner br" id="lastEvent"></div>
+  </section>
+
+  <aside class="side">
+    <h3>Sakinler</h3>
+    <div id="cards"></div>
+    <div class="metrics">
+      <div class="metric">Haiku çağrısı<span id="mCalls">0</span></div>
+      <div class="metric">Ort. tur<span id="mAvg">—</span></div>
+      <div class="metric">Toplam<span id="mTotal">—</span></div>
+    </div>
+  </aside>
+
+  <section class="feed">
+    <h3>Akış</h3>
+    <div id="feed"><div class="empty">Kasaba henüz uyanmadı.</div></div>
+  </section>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const NS = "http://www.w3.org/2000/svg";
+const el = (tag, attrs = {}, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent && parent.appendChild(n); return n; };
+let state = null, selected = null, mapBuilt = false, lastFeedLen = -1;
+
+// Sakinler aynı yerde üst üste binmesin diye mekan çevresinde sabit açılarla dizilir.
+const slot = (i, n) => { if (n === 1) return [0, 26]; const r = 30 + n * 9; const a = -Math.PI / 2 + (i / n) * Math.PI * 2; return [Math.cos(a) * r * 1.5, Math.sin(a) * r + 8]; };
+
+function seeded(n) { let x = Math.sin(n) * 10000; return x - Math.floor(x); }
+
+function buildMap(s) {
+  const svg = $("map"); svg.innerHTML = "";
+  const g = el("g", {}, svg);
+  // Topografik eş yükselti çizgileri
+  for (let k = 0; k < 9; k++) {
+    let d = ""; const cy = 40 + k * 68, amp = 18 + seeded(k) * 22;
+    for (let x = -20; x <= 1020; x += 20) { const y = cy + Math.sin(x / (90 + k * 9) + k) * amp + Math.cos(x / 47 + k * 2) * 6; d += (x === -20 ? "M" : "L") + x + " " + y.toFixed(1) + " "; }
+    el("path", { d, fill: "none", stroke: "rgba(191,227,242,0.045)", "stroke-width": 1 }, g);
+  }
+  // Izgara
+  for (let x = 0; x <= 1000; x += 50) el("line", { x1: x, y1: 0, x2: x, y2: 600, stroke: "rgba(220,232,240,0.025)" }, g);
+  for (let y = 0; y <= 600; y += 50) el("line", { x1: 0, y1: y, x2: 1000, y2: y, stroke: "rgba(220,232,240,0.025)" }, g);
+  const M = s.mekanlar, c = M.meydan;
+  // Yollar: her mekan meydana bağlı; değirmen kasaba dışında kesik çizgiyle
+  for (const [id, m] of Object.entries(M)) {
+    if (id === "meydan") continue;
+    const far = id === "degirmen";
+    el("path", { d: `M${c.x} ${c.y} Q ${(c.x + m.x) / 2 + (far ? 60 : 0)} ${(c.y + m.y) / 2 + (far ? 40 : 0)} ${m.x} ${m.y}`, fill: "none",
+      stroke: far ? "rgba(211,88,74,0.35)" : "rgba(220,232,240,0.16)", "stroke-width": far ? 1 : 1.2, "stroke-dasharray": far ? "3 6" : "none" }, g);
+  }
+  for (const [id, m] of Object.entries(M)) {
+    const far = id === "degirmen";
+    if (far) el("circle", { cx: m.x, cy: m.y, r: 34, fill: "none", stroke: "rgba(211,88,74,0.18)", "stroke-dasharray": "2 4" }, g);
+    el("rect", { x: m.x - 5, y: m.y - 5, width: 10, height: 10, fill: "#07090b", stroke: far ? "rgba(211,88,74,0.8)" : "rgba(191,227,242,0.7)", transform: `rotate(45 ${m.x} ${m.y})` }, g);
+    const t = el("text", { x: m.x, y: m.y - 16, "text-anchor": "middle", class: "place-label" }, g); t.textContent = m.ad;
+    if (far) t.setAttribute("style", "fill: rgba(211,88,74,0.75)");
+  }
+  el("g", { id: "events" }, svg);
+  const layer = el("g", { id: "residents" }, svg);
+  for (const [id, r] of Object.entries(s.sakinler)) {
+    const grp = el("g", { class: "res", id: "res-" + id }, layer);
+    el("circle", { class: "halo", r: 6, fill: "none", stroke: r.renk, opacity: 0 }, grp);
+    el("circle", { r: 5, fill: r.renk }, grp);
+    const t = el("text", { x: 10, y: 4 }, grp); t.textContent = r.ad;
+    const b = el("text", { x: 10, y: 18, class: "bubble" }, grp); b.textContent = "";
+  }
+  mapBuilt = true;
+}
+
+function placeResidents(s) {
+  const groups = {};
+  for (const [id, r] of Object.entries(s.sakinler)) (groups[r.yer] ||= []).push(id);
+  for (const [yer, ids] of Object.entries(groups)) {
+    const m = s.mekanlar[yer];
+    ids.forEach((id, i) => {
+      const [dx, dy] = slot(i, ids.length);
+      const g = $("res-" + id); if (!g) return;
+      g.style.transform = `translate(${m.x + dx}px, ${m.y + dy}px)`;
+      const r = s.sakinler[id];
+      const bubble = g.querySelector(".bubble");
+      bubble.textContent = r.soz && (ids.length <= 3 || selected === id) ? "“" + (r.soz.metin.length > 46 ? r.soz.metin.slice(0, 44) + "…" : r.soz.metin) + "”" : "";
+      g.querySelector(".halo").style.opacity = s.durum === "dusunuyor" ? 1 : 0;
+      g.style.opacity = selected && selected !== id ? 0.35 : 1;
+    });
+  }
+}
+
+function renderCards(s) {
+  const thinking = s.durum === "dusunuyor";
+  $("cards").innerHTML = Object.entries(s.sakinler).map(([id, r]) => `
+    <div class="card${selected === id ? " sel" : ""}${thinking ? " thinking" : ""}" data-id="${id}">
+      <div class="card-top"><i class="dot" style="background:${r.renk}"></i><span class="name">${r.ad}</span><span class="role">${r.unvan}, ${r.yas}</span><span class="where">${s.mekanlar[r.yer].ad}</span></div>
+      <div class="act">${r.eylem}</div>
+      ${r.ic_ses ? `<div class="inner">${r.ic_ses}</div>` : ""}
+      <div class="mood">Ruh hali &nbsp;${r.ruh}</div>
+      <div class="trust">${Object.entries(r.guven).map(([o, v]) => `<div class="tr"><span>${s.sakinler[o].ad}</span><div class="bar"><i style="width:${v}%;background:${s.sakinler[o].renk}"></i></div><b>${v}</b></div>`).join("")}</div>
+    </div>`).join("");
+  document.querySelectorAll(".card").forEach((c) => c.onclick = () => { selected = selected === c.dataset.id ? null : c.dataset.id; renderCards(state); placeResidents(state); });
+}
+
+function renderFeed(s, akis) {
+  if (akis.length === lastFeedLen) return; lastFeedLen = akis.length;
+  if (!akis.length) { $("feed").innerHTML = '<div class="empty">Kasaba henüz uyanmadı.</div>'; return; }
+  const name = (id) => s.sakinler[id]?.ad ?? id;
+  $("feed").innerHTML = akis.slice().reverse().slice(0, 160).map((e) => {
+    const who = e.tip === "anlatici" ? "ANLATICI" : e.tip === "soz" && e.kime && e.kime !== "herkes" ? `${name(e.kim)} → ${name(e.kime)}` : name(e.kim);
+    return `<div class="ev ${e.tip}"><span class="t">G${e.gun} ${e.saat}</span><span class="w">${who}</span><span class="m">${e.metin}</span></div>`;
+  }).join("");
+  const olaylar = akis.filter((e) => e.tip === "anlatici");
+  const son = olaylar[olaylar.length - 1];
+  $("lastEvent").textContent = son ? `SON OLAY  G${son.gun} ${son.saat}  ${(s.mekanlar[son.yer]?.ad ?? "KASABA").toUpperCase()}` : "";
+  const ev = $("events"); ev.innerHTML = "";
+  if (son && son.gun === s.gun && son.tur >= s.tur) {
+    const m = s.mekanlar[son.yer] ?? s.mekanlar.meydan;
+    el("circle", { class: "event-ring", cx: m.x, cy: m.y, r: 10, fill: "none", stroke: "#e3a446" }, ev);
+  }
+}
+
+function renderMetrics(olcum) {
+  const turlar = olcum.filter((o) => o.sure_sn != null);
+  const toplam = turlar.reduce((a, o) => a + o.sure_sn, 0);
+  const calls = olcum.reduce((a, o) => a + (o.cevap || 0), 0);
+  const fmt = (sn) => sn >= 60 ? `${Math.floor(sn / 60)}d ${String(sn % 60).padStart(2, "0")}s` : `${sn}s`;
+  $("mCalls").textContent = calls;
+  $("mAvg").textContent = turlar.length ? fmt(Math.round(toplam / turlar.length)) : "—";
+  $("mTotal").textContent = turlar.length ? fmt(toplam) : "—";
+}
+
+const jsonl = (t) => t.trim().split("\n").filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+
+async function tick() {
+  try {
+    const [s, a, o] = await Promise.all([
+      fetch("/dunya/kasaba.json").then((r) => r.json()),
+      fetch("/dunya/akis.jsonl").then((r) => r.ok ? r.text() : ""),
+      fetch("/dunya/olcum.jsonl").then((r) => r.ok ? r.text() : ""),
+    ]);
+    state = s;
+    if (!mapBuilt) buildMap(s);
+    const key = JSON.stringify(s) + selected;
+    if (key === tick.key && a.length === tick.alen) return;
+    tick.key = key; tick.alen = a.length;
+    $("gun").textContent = s.gun; $("saat").textContent = s.saat; $("tur").textContent = s.tur;
+    const live = s.durum === "dusunuyor";
+    $("status").classList.toggle("live", live);
+    $("statusText").textContent = live ? "SAKİNLER DÜŞÜNÜYOR" : s.durum === "gun_bitti" ? "GÜN BİTTİ" : "BEKLİYOR";
+    renderCards(s); placeResidents(s); renderFeed(s, jsonl(a)); renderMetrics(jsonl(o));
+  } catch (e) { $("statusText").textContent = "BAĞLANTI YOK"; }
+}
+tick(); setInterval(tick, 2000);
+</script>
+</body>
+</html>

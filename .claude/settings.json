@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(dunya/**)",
+      "Write(dunya/cevaplar/**)",
+      "Bash(node scripts/tur.mjs:*)",
+      "Bash(node scripts/tur.mjs *)"
+    ]
+  }
+}

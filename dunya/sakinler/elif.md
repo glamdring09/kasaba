@@ -30,3 +30,11 @@ Değirmen hakkında hiçbir şey bilmiyorsun; yalnız çocukların "lanetli değ
 - Gün 2 16:00, Okul: Bodrumda 1999 Kasım gazetesini buldum, değirmen yangınında bir bekçinin öldüğü yazıyordu ve kimse bundan söz etmiyor.
 - Gün 2 18:00, Okul: Bodrumda 1999 Kasım gazetesini buldum, değirmen yangınında bir bekçinin öldüğünü okudum ve kimsenin bundan söz etmediğini fark ettim.
 - Gün 2 20:00, Okul: Gece sekizde bodrumda kaldım, 1999 sayfalarını tek tek karıştırıp defterime yazmaya devam ettim.
+- Gün 3 08:00, Muhtarlık: Bodrumda 1999 Kasım gazetesini buldum, değirmen yangınında bir bekçinin öldüğü yazıyordu ve kimse bundan söz etmiyor; bunu muhtarlıkta sormaya karar verdim.
+- Gün 3 10:00, Muhtarlık: Bodrumda 1999 Kasım gazetesini buldum, değirmen yangınında bir bekçinin öldüğü yazıyordu ve bunu muhtarla konuşmaya karar verdim.
+- Gün 3 12:00, Muhtarlık: Muhtarlıkta muhtarı beklerken 1999 gazetesini masaya koydum ve bu konuyu ona sormaya kararlıyım.
+- Gün 3 14:00, Kahvehane: Muhtar gelmeyince gazeteyi çantama koyup kahvehaneye geçtim, bu sefer sessiz kahveci Rıza'yı gözlemeye karar verdim.
+- Gün 3 16:00, Kahvehane: Muhtar Kemal gelmeyince gazeteyi çantama koyup kahvehaneye geçtim ve Rıza'yı izlemeye başladım.
+- Gün 3 18:00, Kahvehane: Kahvehanede Rıza'yı izlemek boşuna geçti, bu yüzden Hüseyin Hoca'ya değirmeni sormaya karar verdim.
+- Gün 3 20:00: Seslendiğin Hüseyin Hoca o sırada Kahvehane tarafındaydı, söylediğini duymadı.
+- Gün 3 20:00, Cami: Kahvehanede Hüseyin Hoca'ya değirmeni sordum, sonra onun peşinden camiye geçip 1999 yangınını ve bekçinin ölümünü konuşmaya karar verdim.

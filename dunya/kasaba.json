@@ -1,8 +1,8 @@
 {
   "ad": "Değirmenköy",
-  "gun": 3,
+  "gun": 4,
   "saat": "08:00",
-  "tur": 14,
+  "tur": 21,
   "durum": "gun_bitti",
   "mekanlar": {
     "meydan": {
@@ -52,20 +52,21 @@
       "unvan": "Fırıncı",
       "yas": 52,
       "renk": "#e8b04a",
-      "yer": "kahvehane",
-      "ruh": "meraklı",
-      "eylem": "Ayşe kahvehanede çayını bitirene kadar oturur, sonra yarın sabah için hamur işi düşünerek fırına doğru yola çıkar.",
-      "ic_ses": "Mert'in cipi bu kadar geçiştirmesi bana hiç iyi gelmiyor, amcamın değirmeni de yine aklıma geliyor.",
+      "yer": "muhtarlik",
+      "ruh": "yorgun",
+      "eylem": "Ayşe muhtarlıkta Kemal'le biraz daha konuşup yabancının kartını ve cipi sorar, cevap alamayınca yorgun bir halde fırına dönmek için ayrılır.",
+      "ic_ses": "Bu cipi bulamazsam gece gözüme uyku girmez, ama sabah beşte fırın beni bekliyor.",
       "soz": {
         "kime": "kemal",
-        "metin": "Tamam Kemal Bey, kartı sana bırakıyorum ama bu adamın ne istediğini bana da bir gün anlatırsın, olur mu?"
+        "metin": "Kemal kuzum, o kartı bana bırakmıyorsan en azından kimin olduğunu söyle, yoksa yarın sabah yine gelip sorarım.",
+        "ulasmadi": true
       },
       "guven": {
-        "kemal": 59,
+        "kemal": 54,
         "riza": 74,
         "elif": 85,
         "huseyin": 90,
-        "mert": 50
+        "mert": 38
       }
     },
     "kemal": {
@@ -73,19 +74,16 @@
       "unvan": "Muhtar",
       "yas": 61,
       "renk": "#c9584a",
-      "yer": "kahvehane",
+      "yer": "degirmen",
       "ruh": "huzursuz",
-      "eylem": "Kemal kahvehanede çayından yudum alır, yabancının kartına bakmadan masanın kenarına itip Rıza'nın tavla taşlarını seyreder.",
-      "ic_ses": "Ayşe'nin gözüne bakamıyorum, Selim'in yeğeni olduğunu düşününce boğazım düğümleniyor.",
-      "soz": {
-        "kime": "ayse",
-        "metin": "Kızım, adam kendi işi için gelmiş, sen fırınına bak; bu meseleye bulaşmayalım."
-      },
+      "eylem": "Kemal eski değirmenin harabe duvarının dibinde, kazının açtığı çukurun başında, topal bacağını dinlendirerek sessizce durur.",
+      "ic_ses": "Selim Usta'nın o gece orada uyuduğunu bilmiyordum demek, bu yükü yıllardır taşımamı hafifletmiyor.",
+      "soz": null,
       "guven": {
         "ayse": 69,
-        "riza": 66,
+        "riza": 67,
         "elif": 40,
-        "huseyin": 60,
+        "huseyin": 61,
         "mert": 38
       }
     },
@@ -96,15 +94,12 @@
       "renk": "#7fa36b",
       "yer": "kahvehane",
       "ruh": "huzursuz",
-      "eylem": "Rıza kahvehanede kalıp tavla taşlarını dizer, Kemal'le çayını içer ve radyoyu kısık sesle dinlemeye devam eder.",
-      "ic_ses": "O cipi bir daha görmek istemiyorum, yine o geceyi düşünmeye başladım.",
-      "soz": {
-        "kime": "kemal",
-        "metin": "Kemal, o adamın kartını masada bırak, bu iş bizi ilgilendirmez, kapat konuyu."
-      },
+      "eylem": "Rıza muhtarlıktan çıkıp kahvehaneye döner, kepenk yarım kapalı bırakıp tavla taşlarını yerleştirir ve radyoyu kısık açar.",
+      "ic_ses": "Altı saat aynı masada oturmak bana iyi gelmedi, o gaz lambası da kafamdan çıkmıyor.",
+      "soz": null,
       "guven": {
         "ayse": 82,
-        "kemal": 60,
+        "kemal": 62,
         "elif": 55,
         "huseyin": 85,
         "mert": 50
@@ -115,16 +110,20 @@
       "unvan": "Öğretmen",
       "yas": 29,
       "renk": "#6aa3d8",
-      "yer": "okul",
-      "ruh": "kararlı",
-      "eylem": "Elif bodrumda kalıp 1999 yılının öteki sayfalarını tek tek karıştırır, bulduklarını defterine yazar.",
-      "ic_ses": "Ayşe neden bu kadar kaçamak davranıyor, bu gazetenin başka bir hikayesi var mı diye düşünüyorum.",
-      "soz": null,
+      "yer": "cami",
+      "ruh": "meraklı",
+      "eylem": "Elif, Hüseyin Hoca'nın peşinden camiye gider ve değirmen yangınını, bekçinin ölümünü sormaya devam eder.",
+      "ic_ses": "Hocanın sesi yumuşadı ama gözleri kaçtı, bu konuda bir şey biliyor olmalı.",
+      "soz": {
+        "kime": "huseyin",
+        "metin": "Hocam, 1999'da değirmende yangın çıkmış, bir bekçi ölmüş. Bunu kimse neden konuşmuyor?",
+        "ulasmadi": true
+      },
       "guven": {
         "ayse": 77,
         "kemal": 40,
         "riza": 50,
-        "huseyin": 75,
+        "huseyin": 78,
         "mert": 60
       }
     },
@@ -133,16 +132,20 @@
       "unvan": "İmam",
       "yas": 58,
       "renk": "#d9d4c7",
-      "yer": "cami",
+      "yer": "kahvehane",
       "ruh": "düşünceli",
-      "eylem": "Hüseyin Hoca akşam namazını caminin avlusunda kılar, sonra bir süre avluda oturup düşünür.",
-      "ic_ses": "Nuri Bey'in sözü hâlâ aklımda, ama bu emaneti kimseye taşımak bana düşmez.",
-      "soz": null,
+      "eylem": "Hüseyin Hoca Elif'in sorusuna kısaca cevap verip çayını bitirir, yatsı için camiye kalkmaya hazırlanır.",
+      "ic_ses": "Nuri Bey'in sözünü bu kadar yakından duyan genç bir öğretmen, çocuklara başka ne kadar anlatıyor acaba?",
+      "soz": {
+        "kime": "elif",
+        "metin": "Çocuklar hikaye anlatmayı sever Elif Hanım, ama değirmen hakkında size anlatacak bir şeyim yok.",
+        "ulasmadi": true
+      },
       "guven": {
         "ayse": 85,
-        "kemal": 53,
+        "kemal": 51,
         "riza": 80,
-        "elif": 75,
+        "elif": 77,
         "mert": 71
       }
     },
@@ -151,14 +154,17 @@
       "unvan": "Bakkal",
       "yas": 34,
       "renk": "#4fb3a9",
-      "yer": "bakkal",
+      "yer": "muhtarlik",
       "ruh": "huzursuz",
-      "eylem": "Mert değirmenden çıkıp dükkâna döner, kepenkleri indirmeden önce toptancının mesajlarını bir daha okur.",
-      "ic_ses": "Şu lambanın yatırımcıyla ne ilgisi var, bunu kafamda çevirmeden uyuyamam.",
-      "soz": null,
+      "eylem": "Mert muhtarlıkta Kemal'in masasında paslı gaz lambasını ve şirket tutanağını inceler, lambanın kime ait olduğunu Ayşe ve Rıza'ya sorar.",
+      "ic_ses": "Bu lamba borçlarımı kapatacak işin ucu olabilir, ama Kemal hâlâ bir şey söylemiyor.",
+      "soz": {
+        "kime": "herkes",
+        "metin": "Bu paslı lambayı kim bırakmış olabilir, bilen varsa söylesin."
+      },
       "guven": {
         "ayse": 55,
-        "kemal": 42,
+        "kemal": 40,
         "riza": 55,
         "elif": 70,
         "huseyin": 61

@@ -33,3 +33,11 @@ konuyu kapatır, "eski meseleler" dersin. Ama vicdanın rahat değil.
 - Gün 2 16:00, Kahvehane: Gün 2 saat 16:00'da kahvehanede yabancının kartını okudum, Rıza'ya değirmen meselesinin yeniden açılmasından endişelendiğimi ima ettim.
 - Gün 2 18:00, Kahvehane: Yabancının kartı kahvehanede masadaydı, Ayşe'ye değirmen meselesini geçiştirdim ama içimdeki huzursuzluk arttı.
 - Gün 2 20:00, Kahvehane: Akşam kahvehanede yabancının kartı yüzünden Ayşe'yi geçiştirdim, değirmen konusunun yeniden açılmasından korkuyorum.
+- Gün 3 08:00, Fırın: Gün 3 sabahı kahvehanede yabancının kartına bakmadan kaldım, sonra Ayşe'nin peşinden fırına gidip ona kibar davrandım.
+- Gün 3 10:00, Fırın: Fırında Ayşe'ye yabancının kartı hakkında yarın haber vereceğimi söyledim, ama değirmen sırrını hâlâ açmadım.
+- Gün 3 12:00, Fırın: Fırında Hüseyin Hoca bana dert paylaşmamı söyledi ama değirmen sırrını yine açmadım, Ayşe'ye yabancının kartını da hâlâ anlatamadım.
+- Gün 3 14:00, Muhtarlık: Gün 3 öğlen fırında Hüseyin Hoca'ya yanıt vermeden kaldım, sonra kazıdan çıkan gaz lambası haberi geldi ve muhtarlığa dönmeye karar verdim.
+- Gün 3 16:00, Muhtarlık: Gün 3 16:00'da muhtarlığa dönüp kepçe operatörünün getirdiği gaz lambası ve imzasız tutanağı gördüm, Rıza'ya yabancının kartı hakkında susmasını söyledim.
+- Gün 3 18:00: Seslendiğin Rıza o sırada Muhtarlık tarafındaydı, söylediğini duymadı.
+- Gün 3 18:00, Eski Değirmen: Gün 3 18:00'de kepçe operatörünün bıraktığı gaz lambasına ve imzasız tutanağa bakarken Rıza'ya susmasını söyledim, sonra değirmene gitmeye karar verdim.
+- Gün 3 20:00, Eski Değirmen: Gün 3 akşamı eski değirmen kazısına gelip gaz lambasının yeniden ortaya çıktığını kendi gözümle gördüm ve sırrımın açılmasından korkuyorum.

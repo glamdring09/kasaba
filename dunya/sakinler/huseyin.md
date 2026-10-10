@@ -32,3 +32,12 @@ kim olduğunu söylemeden gitti. Bunu emanet saydın, kimseye anlatmadın. Ara s
 - Gün 2 16:00, Bakkal: Gün 2 öğleden sonra bakkalda Mert'i sakinleştirmeye çalıştım ve Nuri Bey'in emanetini yine kendime sakladım.
 - Gün 2 18:00, Cami: Gün 2 akşamında bakkaldan ayrılıp camiye dönüp akşam namazını kıldım ve avluda Nuri Bey'in emanetini yine kendime sakladım.
 - Gün 2 20:00, Cami: Akşam namazından sonra avluda oturup Nuri Bey'in emanetini yine kendime sakladım.
+- Gün 3 08:00, Fırın: Gün 3 sabahı camiden ayrılıp fırına geçtim, sıcak ekmek alırken Nuri Bey'in emanetini yine aklımdan geçirdim ama kimseye açmadım.
+- Gün 3 10:00, Fırın: Fırında Kemal'in gözlerini kaçırdığını fark edip ona derdini açmasını teklif ettim, Nuri Bey'in emanetini yine kendime sakladım.
+- Gün 3 12:00, Fırın: Fırında Kemal'in derdini sezip ona açılmasını teklif ettim, emanetimi yine kendime sakladım.
+- Gün 3 14:00: Seslendiğin Kemal o sırada Muhtarlık tarafındaydı, söylediğini duymadı.
+- Gün 3 14:00, Meydan: Fırında Kemal'le konuştum, kazıdan çıkan gaz lambasını ve şirketin muhtar imzası istediğini duydum, sonra meydana yöneldim.
+- Gün 3 16:00, Kahvehane: Gün 3 öğleden sonra meydanda kepçe ve kazı konuşulurken Nuri Bey'in sırrını yine kendime sakladım.
+- Gün 3 18:00, Kahvehane: Kahvehanede kazı haberini dinleyip Elif'le konuştum, Nuri Bey'in emanetini yine kimseye açmadım.
+- Gün 3 20:00: Seslendiğin Elif o sırada Cami tarafındaydı, söylediğini duymadı.
+- Gün 3 20:00, Kahvehane: Elif değirmen hikayesini sordu, ben emanetten bahsetmeden geçiştirdim ve akşam yatsıya gitmeye karar verdim.

@@ -31,3 +31,12 @@ hiç tam sinmedi; amcası dikkatli bir adamdı. Bunu kimseye açmaz, ama değirm
 - Gün 2 16:00, Kahvehane: Kahvehaneye yabancı bir adam kartıyla girip değirmen mirasçılarını sordu ve ben de Rıza'ya fotoğrafı ile cipi yeniden sordum.
 - Gün 2 18:00, Kahvehane: Kahvehanede yabancının kartını Kemal'e sordum ama net bir cevap alamadım, Mert'in cipi geçiştirmesi hâlâ içimi kurcalıyor.
 - Gün 2 20:00, Kahvehane: Kemal kartı benden istedi, ben de bırakmadan önce bir şeyin anlatılmasını söyledim; Mert'in cipi geçiştirmesi beni rahatsız etti.
+- Gün 3 08:00, Fırın: Kahvehanede Kemal'e yabancının kartını ve Mert'in cipi geçiştirmesini hatırlattım, sonra da fırına geçip yarınki hamuru düşünmeye karar verdim.
+- Gün 3 10:00, Fırın: Fırında Hoca'ya kapıda bulunan fotoğrafı gösterip cipi sordum ama Mert'in geçiştirmesi aklımı hâlâ kurcalıyor.
+- Gün 3 12:00, Bakkal: Kemal ve Hüseyin Hoca'ya rağmen cipi sormaktan vazgeçmeyeceğime karar verdim ve bakkala gittim.
+- Gün 3 14:00, Bakkal: Gün 3 öğlen bakkala geldim, Mert ortalıkta yoktu ve fotoğraftaki cipi sormak için bekliyorum.
+- Gün 3 16:00, Muhtarlık: Gün 3 16:00'da Mert yine ortalıkta yoktu, bu yüzden beklemeyi bırakıp cip ve yabancının kartı için muhtarlığa gitmeye karar verdim.
+- Gün 3 18:00: Seslendiğin Kemal o sırada Eski Değirmen tarafındaydı, söylediğini duymadı.
+- Gün 3 18:00, Muhtarlık: Muhtarlıkta Kemal'e yabancının kartını ve kapıda bulduğum fotoğraftaki cipi sordum, Kemal ise tutanağı bırakmadı.
+- Gün 3 20:00: Seslendiğin Kemal o sırada Eski Değirmen tarafındaydı, söylediğini duymadı.
+- Gün 3 20:00, Muhtarlık: Muhtarlıkta Kemal'e yabancının kartını ve fotoğraftaki cipi sordum, tutanağı bırakmadı ve bu beni rahatsız etti.

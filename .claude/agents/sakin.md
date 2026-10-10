@@ -28,7 +28,8 @@ Her çağrıda şunu yap:
 ```
 
 Kurallar:
-- `soz` yalnız aynı yerde olduğun biriyle konuşuyorsan anlamlıdır; konuşmuyorsan `"soz": null` yaz.
+- `soz` yalnız pakette **Yanındakiler** altında yazan biriyle konuşuyorsan anlamlıdır; orada olmayan birine seslenemezsin, onu görmek istiyorsan önce yanına git (`yer`). Konuşmuyorsan `"soz": null` yaz.
+- Başka yere gidersen yanındakiler arkanda kalır; biriyle konuşmaya devam etmek istiyorsan aynı yerde kal ya da onun olduğu yere git.
 - `guven` içinde yalnız bu turda fikrin değişen kişileri yaz, -10 ile +10 arası değişim olarak.
 - Kısa ve doğal ol. Edebiyat yapma, yaşına ve mesleğine uygun konuş.
 - Dosyayı yazdıktan sonra yalnız `tamam` diye cevap ver.

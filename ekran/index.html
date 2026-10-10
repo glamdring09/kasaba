@@ -428,6 +428,7 @@ function renderFeed(s, akis) {
   if (!list.length) { $("feed").innerHTML = '<div class="empty">Henüz kimse konuşmadı.</div>'; return; }
   $("feed").innerHTML = list.slice().reverse().slice(0, 150).map((e) => {
     const who = e.tip === "anlatici" ? "KASABADA" : e.tip === "soz" && e.kime && e.kime !== "herkes" ? `${name(e.kim)} → ${name(e.kime)}` : e.tip === "ic_ses" ? `${name(e.kim)} (içinden)` : name(e.kim);
+    if (e.ulasmadi) return `<div class="ev ${e.tip}"><span class="t">${e.saat.replace(":", ".")}</span><span class="w">${who}</span><span class="m" style="opacity:.55">${e.metin}</span></div>`;
     return `<div class="ev ${e.tip}"><span class="t">${e.saat.replace(":", ".")}</span><span class="w">${who}</span><span class="m">${e.metin}</span></div>`;
   }).join("");
 }

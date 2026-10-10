@@ -16,3 +16,10 @@ almak istediğini duydun; arazinin kime ait olduğunu bilen muhtarmış. Bu iş 
 - Hüseyin Hoca: nasihatinden kaçarsın ama saygı duyarsın.
 
 ## Hafıza
+- Gün 1 08:00, Bakkal: Şehirden bir yatırımcının değirmen arazisini istediğini duydum ve bunun borçlarımı kapatabileceğini düşünüyorum.
+- Gün 1 10:00, Bakkal: Gün 1 10:00'da bakkalda telefondan yatırımcı ve arazi bilgisi aradım, veresiye defterine bakıp muhtara danışmayı düşündüm.
+- Gün 1 12:00, Muhtarlık: Yatırımcının kim olduğunu ve arazinin sahibini öğrenmek için muhtar Kemal'e gittim.
+- Gün 1 14:00, Muhtarlık: Muhtar Kemal'e yatırımcıyı ve değirmen arazisini sordum, cevabını almadan çıkmak istemiyorum.
+- Gün 1 16:00, Muhtarlık: Muhtar Kemal yatırımcı ve arazi konusunda bilgi vermedi, resmi evrak şartını koydu ve Mert dükkâna dönmeye karar verdi.
+- Gün 1 18:00, Bakkal: Muhtar Kemal yatırımcı ve arazi hakkında hiçbir şey söylemedi, resmi evrak şartı koydu ve ben dükkâna dönerken borçlarımı düşündüm.
+- Gün 1 20:00, Bakkal: Muhtar Kemal yatırımcı ve arazi hakkında bir şey söylemedi, ben de dükkâna dönüp borçlarımı düşündüm.

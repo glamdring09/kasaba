@@ -120,7 +120,14 @@ function uygula() {
     akisa({ ...ortak, tip: "eylem", metin: k.eylem });
     if (k.soz) {
       const duyanlar = Object.entries(s.sakinler).filter(([o, ok]) => o !== id && ok.yer === k.yer).map(([o]) => o);
-      akisa({ ...ortak, tip: "soz", kime: k.soz.kime, metin: k.soz.metin, duyanlar });
+      // Herkes aynı anda hareket ettiği için seslenilen kişi o sırada başka yere gitmiş olabilir: söz ona ulaşmaz.
+      const hedef = s.sakinler[k.soz.kime];
+      const ulasmadi = !!hedef && hedef.yer !== k.yer;
+      akisa({ ...ortak, tip: "soz", kime: k.soz.kime, metin: k.soz.metin, duyanlar, ...(ulasmadi && { ulasmadi: true }) });
+      if (ulasmadi) {
+        appendFileSync(D("sakinler", `${id}.md`), `- Gün ${s.gun} ${s.saat}: ${hedef.ad}'a seslendin ama o sırada ${s.mekanlar[hedef.yer].ad} tarafındaydı, söylediğini duymadı.\n`);
+        k.soz = { ...k.soz, ulasmadi: true };
+      }
     }
     if (k.ic_ses) akisa({ ...ortak, tip: "ic_ses", metin: k.ic_ses });
     if (c.hafiza) appendFileSync(D("sakinler", `${id}.md`), `- Gün ${s.gun} ${s.saat}, ${s.mekanlar[k.yer].ad}: ${c.hafiza}\n`);

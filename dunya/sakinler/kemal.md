@@ -19,3 +19,10 @@ konuyu kapatır, "eski meseleler" dersin. Ama vicdanın rahat değil.
 - Mert: borçlu bakkal; ona yardım edebilecek konumdasın.
 
 ## Hafıza
+- Gün 1 08:00, Muhtarlık: Sabah muhtarlığı açtım, evrakları düzene koydum ve kimseyle konuşmadan çayımı içtim.
+- Gün 1 10:00, Muhtarlık: Sabah saat 10'da muhtarlıkta evrakları sıraya dizdim ve kimseyle konuşmadan çayımı içtim.
+- Gün 1 12:00, Muhtarlık: Öğlen saatinde muhtarlıkta yalnız oturup evrakları bitirdim ve kafamda hâlâ eski değirmen meselesi vardı.
+- Gün 1 14:00, Muhtarlık: Mert muhtarlığa gelip yatırımcıyı sordu, cevap verip geçiştirdim; şehir cipi değirmen yoluna sapmış olabilir.
+- Gün 1 16:00, Muhtarlık: Mert yatırımcıyı ve değirmen arazisini sordu, ben geçiştirdim ve ona resmi duyuru beklemesini söyledim.
+- Gün 1 18:00, Muhtarlık: Mert'e değirmen konusunu resmi duyuruya kadar kapattığımı söyledim, ama bu meselenin yeniden açılacağından korkuyorum.
+- Gün 1 20:00, Muhtarlık: Akşam 20:00'de muhtarlıkta yalnız oturup Mert'in gelmesini bekledim ve değirmen meselesinin yeniden açılmasından korktum.
